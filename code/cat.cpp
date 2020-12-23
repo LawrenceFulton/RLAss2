@@ -3,7 +3,7 @@
 Cat::Cat(){};
 
 Cat::Cat(int x, int y, int z){
-  Agent(x,y);
+  Agent::setCoordinates(x,y);
   this->z = z;
 } 
 Cat::~Cat(){};
@@ -11,5 +11,5 @@ Cat::~Cat(){};
 
 void Cat::printCoordinates(){
   std::cout << z << std::endl;
-
+  Agent::printCoordinates();
 }

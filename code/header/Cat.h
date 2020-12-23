@@ -4,7 +4,7 @@
 #include <iostream>
 #include <ostream> 
 
-class Cat: private Agent
+class Cat: public Agent
 {
 
 private:
