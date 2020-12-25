@@ -3,20 +3,25 @@
 
 #include <ostream>
 #include <iostream>
-
+#include "Location.h"
 
 
 class Agent
 {
 private:
-  int x;
-  int y;
+  int r;
+  int c;
+  Location *curLoc;
+
 public:
   Agent();
-  Agent(int x, int y);
+  Agent(int r, int c);
   ~Agent();
   void printCoordinates();
-  void setCoordinates(int x, int y);
+  void setCoordinates(int r, int c);
+  void setCurrentLoc(Location *curLoc);
+  Location * getCurrentLoc();
+  void move(char direction);
 
 };
 

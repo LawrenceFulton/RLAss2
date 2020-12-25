@@ -3,44 +3,95 @@ World::World(/* args */)
 {
 }
 
-World::World(int sizeX, int sizeY){
-  this->sizeX = sizeX;
-  this->sizeY = sizeY;
+World::World(int rows, int columns ){
 
-  locations = new Location*[sizeX];
-  for (size_t i = 0; i < sizeX; i++)
+
+  this->rows = rows;
+  this->columns = columns;
+
+
+  // Initialisation of the 2d Array. These are empy "Location" which still need to be filled with information
+  locations = new Location*[rows];
+  for (size_t i = 0; i < rows; ++i)
   {
-    locations[i] = new Location[sizeY];
+    locations[i] = new Location[columns];
   }
   //Making the boarders of the world, no walls (for now)
   
-  // top and bottom boarder of the world 
-  for (size_t x = 0; x < sizeX; x++)
-  { 
-    locations[x][0].setPossDirect(true, true, true, false);
-    locations[x][sizeY-1].setPossDirect(true,true, false, true);
-  }
 
-  // left and right boarder of the world 
-  for (size_t y = 0; y < sizeY; y++)
+  std::cout << "rows: " << rows << std::endl;
+  std::cout << "columns:" << columns << std::endl;
+
+  int counter = 0;
+
+  std::cout << "START " << std::endl;
+
+  for (size_t r = 0; r < rows; r++)
   {
-    locations[0][y].setPossDirect(false, true, true, true);
-    locations[sizeX-1][y].setPossDirect(true,false,true,true);
+    for (size_t c = 0; c < columns; c++)
+    {
+      std::cout << counter << ": " << r << c  << "and rows and colums are " << rows << ", "  << columns <<std::endl;
+      counter ++;
+
+      if (r == 0) // top row 
+      {
+        if (c == 0) // top left corner 
+        {
+          locations[r][c].setNeighbours(NULL, &locations[r][c+1], NULL, &locations[r+1][c]);
+          locations[r][c].setPossDirect(0,1,0,1);
+        }else if(c == columns-1){ // top right corner
+          locations[r][c].setNeighbours(&locations[r][c-1], NULL, NULL, &locations[r+1][c]);
+          locations[r][c].setPossDirect(1,0,0,1);
+        }else // top row w/o corners 
+        {
+          locations[r][c].setNeighbours(&locations[r][c-1], &locations[r][c+1], NULL, &locations[r+1][c]);
+          locations[r][c].setPossDirect(1,1,0,1);
+        }
+      } else if(r == rows-1) // bottom row
+      {
+        if (c == 0) // bottom left corner 
+        {
+          locations[r][c].setNeighbours(NULL, &locations[r][c+1],&locations[r-1][c] ,NULL );
+          locations[r][c].setPossDirect(0,1,1,0);
+        }else if(c == columns-1){ // bottom right corner
+          locations[r][c].setNeighbours(&locations[r][c-1], NULL, &locations[r-1][c] ,NULL);
+          locations[r][c].setPossDirect(1,0,1,0);
+        }else // bottom row w/o corners 
+        {
+          locations[r][c].setNeighbours(&locations[r][c-1], &locations[r][c+1], &locations[r-1][c] ,NULL);
+          locations[r][c].setPossDirect(1,1,1,0);
+          std::cout << "yes"<< std::endl;
+        }
+      }else
+      {
+        if (c == 0) // left row 
+        {
+          locations[r][c].setNeighbours(NULL, &locations[r][c+1], &locations[r-1][c], &locations[r+1][c]);
+          locations[r][c].setPossDirect(0,1,1,1);
+        }else if(c == columns-1){ // right row
+          locations[r][c].setNeighbours(&locations[r][c-1], NULL,&locations[r-1][c], &locations[r+1][c]);
+          locations[r][c].setPossDirect(1,0,1,1);
+        }else // center 
+        {
+          locations[r][c].setNeighbours(&locations[r][c-1], &locations[r][c+1], &locations[r-1][c], &locations[r+1][c]);
+          locations[r][c].setPossDirect(1,1,1,1);
+        }
+      }
+    }
+    
   }
-
-  //corner points
-
-  locations[0][0].setPossDirect(0,1,1,0);
-  locations[0][sizeY-1].setPossDirect(0,1,0,1);
-  locations[sizeX-1][sizeY-1].setPossDirect(1,0,0,1);
-  locations[sizeX-1][0].setPossDirect(1,0,1,0);
+  // add the goal state.
+  // setGoal(rows-1, columns-1);
+  std::cout << "bla bla" << std::endl;
 }
 
 
 void World::printAllPossDirect(){
-  for (size_t x = 0; x < sizeX; x++)
+
+  // std::cout << "sizes " << sizeX << sizeY << std::endl;
+  for (size_t x = 0; x < rows; x++)
   {
-    for (size_t y = 0; y < sizeY; y++)
+    for (size_t y = 0; y < columns; y++)
     {
       std::cout << "(" << x << "," << y << "): " ;
       locations[x][y].printPossDirect();
@@ -52,4 +103,14 @@ void World::printAllPossDirect(){
 
 World::~World()
 { 
+  //TODO: delete the multidimensional array!
+}
+
+void World::setGoal(int x, int y){
+  locations[x][y].setGoal(true); 
+  goal = locations[x][y];
+}
+
+Location * World::getLocation(int row, int coloum ){
+  return &locations[row][coloum];
 }

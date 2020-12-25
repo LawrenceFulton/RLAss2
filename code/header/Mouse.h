@@ -2,13 +2,17 @@
 #define MOUSE_H
 
 #include "Agent.h"
+#include "Location.h"
 
-class Mouse: private Agent
+class Mouse: public Agent
 {
 private:
-  /* data */
+  int steps;
+  int x;
+  int y;
 public:
   Mouse(/* args */);
+  Mouse(int x, int y);
   ~Mouse();
 };
 

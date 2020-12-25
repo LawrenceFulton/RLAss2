@@ -7,17 +7,23 @@ class World
 {
 private:
   /* data */
-  int sizeX;
-  int sizeY;
+  int rows;
+  int columns;
   Location **locations;
+  Location goal;
+
+  /*  functions */
+  void setGoal(int row, int coloumn);
+
 
 
 public:
   World(/* args */);
-  World(int sizeX, int sizeY);
+  World(int rows, int coloumns);
   ~World();
   //////////////////
   void printAllPossDirect();
+  Location * getLocation(int row, int coloumn);
 };
 
 

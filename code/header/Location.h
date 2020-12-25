@@ -11,6 +11,14 @@ private:
   bool toTop; 
   bool toBottom;
   bool isGoal;
+  int x;
+  int y;
+
+  Location *leftNeighbour;
+  Location *rightNeighbour;
+  Location *topNeighbour;
+  Location *bottomNeighbour;
+
 
 public:
   Location(/* args */);
@@ -18,8 +26,11 @@ public:
   ~Location();
 
   void setPossDirect(bool toLeft, bool toRight, bool toTop, bool toBottom);
+  void setNeighbours(Location *leftNeighbour, Location *rightNeighbour, Location *topNeighbour, Location *bottomNeighbour);
+  void setCoordinates(int x, int y);
   void printPossDirect();
   void setGoal(bool isGoal);
+  Location * getNeighbour(char direction);
 };
 
 
