@@ -2,11 +2,15 @@
 
 
 Mouse::Mouse(){
+  *this = Mouse(0,0);
 };
 
 
 Mouse::Mouse(int x, int y){
-  Agent::setCoordinates(x,y);
+  setCoordinates(x,y);
   steps = 0;
 }
+
+
+Mouse::~Mouse(){}
 

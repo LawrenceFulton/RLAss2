@@ -4,6 +4,7 @@
 #include <ostream>
 #include <iostream>
 #include "Location.h"
+#include "World.h"
 
 
 class Agent
@@ -11,18 +12,20 @@ class Agent
 private:
   int r;
   int c;
-  Location *curLoc;
 
 public:
+
   Agent();
   Agent(int r, int c);
   ~Agent();
   void printCoordinates();
   void setCoordinates(int r, int c);
-  void setCurrentLoc(Location *curLoc);
-  Location * getCurrentLoc();
-  void move(char direction);
+  void move(char direction, Location* curLoc);
+  int getR();
+  int getC();
 
+  // World getWorld();
+  // void setWorld(World world);
 };
 
 

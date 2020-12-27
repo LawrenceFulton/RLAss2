@@ -4,10 +4,12 @@
 
 Location::Location(/* args */)
 {
-  this->toLeft = true;
-  this->toRight = true;
-  this->toTop = true;
-  this->toBottom = true;
+  this->toLeft = false;
+  this->toRight = false;
+  this->toTop = false;
+  this->toBottom = false;
+
+  std::cout << "SHOULD NEVER PRINT THIS" << std::endl;
 }
 
 Location::Location(bool toLeft, bool toRight, bool toTop, bool toBottom)
@@ -16,7 +18,7 @@ Location::Location(bool toLeft, bool toRight, bool toTop, bool toBottom)
   this->toRight = toRight;
   this->toTop = toTop;
   this->toBottom = toBottom;
-  this->isGoal = false;
+  this->goal = false;
 }
 
 Location::~Location()
@@ -30,43 +32,43 @@ void Location::setPossDirect(bool toLeft, bool toRight, bool toTop, bool toBotto
   this->toBottom = toBottom;
 }
 
-void Location::setNeighbours(Location *leftNeighbour, Location *rightNeighbour, Location *topNeighbour, Location *bottomNeighbour){
-  this->leftNeighbour = leftNeighbour;
-  this->rightNeighbour = rightNeighbour;
-  this->topNeighbour = topNeighbour;
-  this->bottomNeighbour = bottomNeighbour;
-}
-
 
 void Location::printPossDirect(){
   std::cout << "L" << toLeft << " R" << toRight << " T"<< toTop << " B" << toBottom << std::endl;
 }
 
-void Location::setGoal(bool isGoal ){
-  this->isGoal = isGoal;
+void Location::setGoal(bool goal){
+  this->goal = goal;
 }
 
-Location * Location::getNeighbour(char direction){
-  Location *newLoc;
+bool Location::isGoal(){
+  return goal;
+}
+
+
+// is the direction possible, 
+// chars to use 'l , r, t, d'
+bool Location::isDirecPoss(char direction){
+  bool isPoss;
+  
+  std::cout << "bla bla " << std::endl;
+
   switch (direction)
-    {
-    case 'l':
-      toLeft = toLeft ? leftNeighbour: NULL;
-      break;
-    case 'r':
-      newLoc = toRight ? rightNeighbour: NULL;
-      break;
-
-    case 't':
-      newLoc = toTop ? topNeighbour: NULL;
-      break;
-
-    case 'b':
-      newLoc = toBottom ? bottomNeighbour: NULL;
-      break;
-    
-    default:
-      std::cout << "Default in Location and the char was " << direction << std::endl;
-    }
-  return newLoc; 
+  {
+  case 'l': // left
+    isPoss = toLeft;
+    break;
+  case 'r': // right
+    isPoss = toRight;
+    break;
+  case 't': // up
+    isPoss = toTop;
+    break;
+  case 'd': // down
+    isPoss = toBottom;
+    break;
+  default:
+    std::cout << "Wrong char please enter 'l , r, t, d'. Enterd char was " << direction << std::endl; 
+  }
+  return isPoss;
 }

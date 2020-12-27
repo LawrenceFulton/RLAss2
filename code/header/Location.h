@@ -10,27 +10,28 @@ private:
   bool toRight;
   bool toTop; 
   bool toBottom;
-  bool isGoal;
+  bool goal;
   int x;
   int y;
 
-  Location *leftNeighbour;
-  Location *rightNeighbour;
-  Location *topNeighbour;
-  Location *bottomNeighbour;
-
 
 public:
+  int id; // for debugging mostly
   Location(/* args */);
   Location(bool toLeft, bool toRight, bool toTop, bool toBottom);
   ~Location();
 
   void setPossDirect(bool toLeft, bool toRight, bool toTop, bool toBottom);
-  void setNeighbours(Location *leftNeighbour, Location *rightNeighbour, Location *topNeighbour, Location *bottomNeighbour);
   void setCoordinates(int x, int y);
   void printPossDirect();
-  void setGoal(bool isGoal);
-  Location * getNeighbour(char direction);
+  void setGoal(bool goal);
+  bool isGoal();
+
+  bool isDirecPoss(char direction);
+
+
+
+
 };
 
 

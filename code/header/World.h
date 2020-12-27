@@ -2,6 +2,9 @@
 #define WORLD_H
 
 #include "Location.h"
+#include <iostream>
+#include <ostream> 
+
 
 class World
 {
@@ -11,6 +14,9 @@ private:
   int columns;
   Location **locations;
   Location goal;
+  int id; // for debug mostly ( ͡ᵔ ͜ʖ ͡ᵔ )
+
+
 
   /*  functions */
   void setGoal(int row, int coloumn);
@@ -24,6 +30,11 @@ public:
   //////////////////
   void printAllPossDirect();
   Location * getLocation(int row, int coloumn);
+  int getMaxRows();
+  int getMaxColumns();
+  int getId();
+  void setId(int id);
+
 };
 
 

@@ -2,11 +2,11 @@
 
 Agent::Agent(){};
 
-Agent::Agent(int r, int c){
+Agent::Agent(int r, int c ){
   this->r = r;
   this->c = c;
+  // world = world1;
 }
-Agent::~Agent(){};
 
 void Agent::printCoordinates(){
   std::cout << "(" << r << "," << c << ")" <<std::endl;
@@ -17,22 +17,21 @@ void Agent::setCoordinates(int r, int c){
   this->c = c;
 }
 
-void Agent::setCurrentLoc(Location *curLoc){
-  this->curLoc = curLoc;
-}
+// World Agent::getWorld(){
+//   return world;
+// }
 
-Location * Agent::getCurrentLoc(){
-  return curLoc;
-}
+// void Agent::setWorld(World world){
+//   this->world = world;
+// }
 
-void Agent::move(char direction){
-  // curLoc = curLoc->getNeighbour(direction);
 
-  Location *interLoc = curLoc->getNeighbour(direction); // intermediate Location, has to still be checked if thats a possible move
-  curLoc->printPossDirect();
-  if (interLoc != NULL)
+// moves the agent into any of the four directions
+// chars to use for direction 'l , r, t, d'
+void Agent::move(char direction, Location* curLoc){
+  if ((curLoc->isDirecPoss(direction)))
   {
-  switch (direction)
+    switch (direction)
     {
     case 'l': // left
       c--;
@@ -47,11 +46,20 @@ void Agent::move(char direction){
       r++;
       break;
     }
-    curLoc = interLoc;
-  }else
-  {
-    std::cout << "illegal move 8)" << std::endl;
   }
 }
 
+// gets the row
+int Agent::getR(){
+  return r;
+}
 
+// gets the coloum 
+int Agent::getC(){
+  return c;
+}
+
+
+
+
+Agent::~Agent(){};

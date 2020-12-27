@@ -3,6 +3,7 @@
 
 #include "Agent.h"
 #include "Location.h"
+#include "World.h"
 
 class Mouse: public Agent
 {

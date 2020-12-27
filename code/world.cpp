@@ -1,6 +1,7 @@
 #include "header/World.h"
 World::World(/* args */)
 {
+  *this = World(3,3);
 }
 
 World::World(int rows, int columns ){
@@ -17,19 +18,15 @@ World::World(int rows, int columns ){
     locations[i] = new Location[columns];
   }
   //Making the boarders of the world, no walls (for now)
-  
 
-  std::cout << "rows: " << rows << std::endl;
-  std::cout << "columns:" << columns << std::endl;
 
   int counter = 0;
-
-  std::cout << "START " << std::endl;
 
   for (size_t r = 0; r < rows; r++)
   {
     for (size_t c = 0; c < columns; c++)
     {
+      locations[r][c].id = counter;
       std::cout << counter << ": " << r << c  << "and rows and colums are " << rows << ", "  << columns <<std::endl;
       counter ++;
 
@@ -37,28 +34,22 @@ World::World(int rows, int columns ){
       {
         if (c == 0) // top left corner 
         {
-          locations[r][c].setNeighbours(NULL, &locations[r][c+1], NULL, &locations[r+1][c]);
           locations[r][c].setPossDirect(0,1,0,1);
         }else if(c == columns-1){ // top right corner
-          locations[r][c].setNeighbours(&locations[r][c-1], NULL, NULL, &locations[r+1][c]);
           locations[r][c].setPossDirect(1,0,0,1);
         }else // top row w/o corners 
         {
-          locations[r][c].setNeighbours(&locations[r][c-1], &locations[r][c+1], NULL, &locations[r+1][c]);
           locations[r][c].setPossDirect(1,1,0,1);
         }
       } else if(r == rows-1) // bottom row
       {
         if (c == 0) // bottom left corner 
         {
-          locations[r][c].setNeighbours(NULL, &locations[r][c+1],&locations[r-1][c] ,NULL );
           locations[r][c].setPossDirect(0,1,1,0);
         }else if(c == columns-1){ // bottom right corner
-          locations[r][c].setNeighbours(&locations[r][c-1], NULL, &locations[r-1][c] ,NULL);
           locations[r][c].setPossDirect(1,0,1,0);
         }else // bottom row w/o corners 
         {
-          locations[r][c].setNeighbours(&locations[r][c-1], &locations[r][c+1], &locations[r-1][c] ,NULL);
           locations[r][c].setPossDirect(1,1,1,0);
           std::cout << "yes"<< std::endl;
         }
@@ -66,14 +57,11 @@ World::World(int rows, int columns ){
       {
         if (c == 0) // left row 
         {
-          locations[r][c].setNeighbours(NULL, &locations[r][c+1], &locations[r-1][c], &locations[r+1][c]);
           locations[r][c].setPossDirect(0,1,1,1);
         }else if(c == columns-1){ // right row
-          locations[r][c].setNeighbours(&locations[r][c-1], NULL,&locations[r-1][c], &locations[r+1][c]);
           locations[r][c].setPossDirect(1,0,1,1);
         }else // center 
         {
-          locations[r][c].setNeighbours(&locations[r][c-1], &locations[r][c+1], &locations[r-1][c], &locations[r+1][c]);
           locations[r][c].setPossDirect(1,1,1,1);
         }
       }
@@ -81,8 +69,7 @@ World::World(int rows, int columns ){
     
   }
   // add the goal state.
-  // setGoal(rows-1, columns-1);
-  std::cout << "bla bla" << std::endl;
+  setGoal(rows-1, columns-1);
 }
 
 
@@ -113,4 +100,21 @@ void World::setGoal(int x, int y){
 
 Location * World::getLocation(int row, int coloum ){
   return &locations[row][coloum];
+}
+
+
+int World::getMaxRows(){
+  return rows;
+}
+
+int World::getMaxColumns(){
+  return columns;
+}
+
+int World::getId(){
+  return id;
+}
+
+void World::setId(int id){
+  this->id = id;
 }
