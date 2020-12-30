@@ -7,9 +7,11 @@
 #include "code/header/World.h"
 #include "code/header/State.h"
 #include "code/header/RowCol.h"
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 
 
-#define ROWS 3
-#define COLUMNS 3
+#define ROWS 2
+#define COLUMNS 2
 
 #endif 

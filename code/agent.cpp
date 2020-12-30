@@ -25,6 +25,8 @@ Agent::Agent(int r, int c, int maxRow, int maxCol ){
         for (size_t cC = 0; cC < maxCol; cC++)
         {
           states[mR*mc2mr   +mC*mcmr + cR*maxCol + cC].setValues(mR,mC,cR, cC, 0);
+          states[mR*mc2mr   +mC*mcmr + cR*maxCol + cC].id = counter;
+          counter++;
         }
 
   printInteralStates();
@@ -76,11 +78,8 @@ int Agent::getC(){
 }
 
 void Agent::printInteralStates(){
-
   int mc2mr = maxCol*maxRow*maxCol;
   int mcmr = maxCol*maxRow;
-
-  // decomment for checking of all states 
   for (size_t mR = 0; mR < maxRow; mR++)
     for (size_t mC = 0; mC < maxCol; mC++)
       for (size_t cR = 0; cR < maxRow; cR++)
@@ -89,4 +88,38 @@ void Agent::printInteralStates(){
 }
 
 
-Agent::~Agent(){};
+// overtakes the transition from the world created in the main file 
+void Agent::learnTransitions(World* world){
+  Location* loc;
+
+  int mc2mr = maxCol*maxCol*maxRow;
+  int mcmr = maxCol * maxRow;
+
+  std::cout << mc2mr << "    -    " << mcmr << std::endl;
+
+
+
+  bool left;
+  bool right;
+  bool top;
+  bool bottom;
+
+  for (size_t r = 0; r < maxRow; r++) // rows
+    for (size_t c = 0; c < maxCol; c++) // columns
+    {
+      loc = world->getLocation(r,c);
+      for (size_t d = 0; d < mcmr; d++) // depth
+      {
+        std::cout <<  r*mc2mr + c*mcmr+ d  << std::endl;
+        states[ r*mc2mr + c*mcmr+ d].setTransition(loc); 
+      }
+    }
+
+    printInteralStates();
+}
+
+
+
+Agent::~Agent(){
+  free (states);
+};

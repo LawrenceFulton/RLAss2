@@ -2,8 +2,11 @@
 #define STATE_H
 
 #include "RowCol.h"
+#include "Location.h"
 #include <iostream>
 #include <ostream>
+#include <float.h>
+#include <stdlib.h>     /* srand, rand */
 
 class State
 {
@@ -16,14 +19,20 @@ private:
   // int nCat; 
   RowCol *catRowCal;
 
-  double Q;
+  double toTop;
+  double toBottom;
+  double toLeft;
+  double toRight;
+  double r;
 
 public:
+  int id;
   State(/* args */);
   State(int mouseX, int mouseY, int catX, int catY);
   void printState();
-  void setValues(int mouseX, int mouseY, int catX, int catY, int Q);
-
+  void setValues(int mouseX, int mouseY, int catX, int catY, int r);
+  void setTransition(Location* loc);
+  char getBestMove();
   ~State();
 };
 

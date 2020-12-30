@@ -7,18 +7,21 @@
 #include "World.h"
 #include "State.h"
 #include <math.h>       /* pow */
+#include "World.h"
 
 
 class Agent
 {
 private:
+
+
+//so one can access the data in Mouse since it inherates from Agent 007 
+protected:
   int r;
   int c;
-
-  int maxRow;
-  int maxCol;
   State* states;
-
+  int maxRow;
+  int maxCol;  
 
 
 public:
@@ -31,6 +34,7 @@ public:
   int getR();
   int getC();
   void printInteralStates();
+  void learnTransitions(World* world);
 
 };
 

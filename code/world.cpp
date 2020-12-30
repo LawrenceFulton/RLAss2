@@ -5,8 +5,6 @@ World::World(/* args */)
 }
 
 World::World(int rows, int columns ){
-
-
   this->rows = rows;
   this->columns = columns;
 
@@ -98,7 +96,7 @@ void World::setGoal(int x, int y){
   goal = locations[x][y];
 }
 
-Location * World::getLocation(int row, int coloum ){
+Location* World::getLocation(int row, int coloum ){
   return &locations[row][coloum];
 }
 

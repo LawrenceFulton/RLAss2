@@ -51,7 +51,7 @@ bool Location::isGoal(){
 bool Location::isDirecPoss(char direction){
   bool isPoss;
   
-  std::cout << "bla bla " << std::endl;
+  // std::cout << "bla bla " << std::endl;
 
   switch (direction)
   {
