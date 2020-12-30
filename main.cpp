@@ -4,8 +4,8 @@
 int main(int argc, char const *argv[])
 {
 
-  World newWorld(6,6);
-  Mouse mouse(0,0);
+  World newWorld(ROWS,COLUMNS);
+  Mouse mouse(0,0,ROWS, COLUMNS);
   World* pointerW = &newWorld; 
   Location* curLoc;
   char input;

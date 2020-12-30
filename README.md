@@ -2,7 +2,7 @@
 
 ## How to run:
 first run: \
-``g++ -o a.out  main.cpp code/Agent.cpp code/Cat.cpp  code/World.cpp code/Location.cpp code/Mouse.cpp``
+``g++ -o a.out  main.cpp code/Agent.cpp code/Cat.cpp  code/World.cpp code/Location.cpp code/Mouse.cpp code/State.cpp code/RowCol.cpp ``
 
 then run:\
 ``./a.out``
