@@ -87,7 +87,7 @@ int Agent::getR(){
   return r;
 }
 
-// gets the coloum 
+// gets the column 
 int Agent::getC(){
   return c;
 }
