@@ -19,17 +19,17 @@ private:
 
 
   /*  functions */
-  void setGoal(int row, int coloumn);
+  void setGoal(int row, int column);
 
 
 
 public:
   World(/* args */);
-  World(int rows, int coloumns);
+  World(int rows, int columns);
   ~World();
   //////////////////
   void printAllPossDirect();
-  Location * getLocation(int row, int coloumn);
+  Location * getLocation(int row, int column);
   int getMaxRows();
   int getMaxColumns();
   int getId();

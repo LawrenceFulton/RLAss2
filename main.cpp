@@ -1,7 +1,5 @@
 #include "main.h"
 
-
-
 void qLearning(){
 
 }
@@ -80,8 +78,8 @@ int main(int argc, char const *argv[])
   World* pointerW = &newWorld; 
   Location* curLoc;
   char input;
-  int mR, mC; // mouse coloum and row
-  int cR, cC; // cat coloum and row
+  int mR, mC; // mouse column and row
+  int cR, cC; // cat column and row
   mouse.learnTransitions(pointerW);
   cR = cC = 1;
   char bestMove;
