@@ -30,6 +30,7 @@ public:
   ~Agent();
   void printCoordinates();
   void setCoordinates(int r, int c);
+  void move(char direction);
   void move(char direction, Location* curLoc);
   int getR();
   int getC();

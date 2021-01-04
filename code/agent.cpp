@@ -58,13 +58,9 @@ void Agent::setCoordinates(int r, int c){
 
 
 
-
-// moves the agent into any of the four directions
-// chars to use for direction 'l , r, t, d'
-void Agent::move(char direction, Location* curLoc){
-  if ((curLoc->isDirecPoss(direction)))
-  {
-    switch (direction)
+// doesn't check if the direction is possible and thus can lead to segmentation fault
+void Agent::move(char direction){
+  switch (direction)
     {
     case 'l': // left
       c--;
@@ -79,6 +75,15 @@ void Agent::move(char direction, Location* curLoc){
       r++;
       break;
     }
+}
+
+
+// moves the agent into any of the four directions
+// chars to use for direction 'l , r, t, d'
+void Agent::move(char direction, Location* curLoc){
+  if ((curLoc->isDirecPoss(direction)))
+  {
+    move(direction);
   }
 }
 

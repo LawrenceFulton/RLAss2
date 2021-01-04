@@ -97,6 +97,7 @@ int main(int argc, char const *argv[])
     mouse.move(bestMove,curLoc);
     reward = mouse.getInternalState(cR,cC).getR();
     
+    //Bellman equation
 
   }
   
