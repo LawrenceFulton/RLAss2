@@ -30,9 +30,10 @@ public:
   State(/* args */);
   State(int mouseX, int mouseY, int catX, int catY);
   void printState();
-  void setValues(int mouseX, int mouseY, int catX, int catY, int r);
+  void setValues(int mouseX, int mouseY, int catX, int catY, double r);
   void setTransition(Location* loc);
   char getBestMove();
+  int getR();
   ~State();
 };
 

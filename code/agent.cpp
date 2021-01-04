@@ -24,7 +24,22 @@ Agent::Agent(int r, int c, int maxRow, int maxCol ){
       for (size_t cR = 0; cR < maxRow; cR++)
         for (size_t cC = 0; cC < maxCol; cC++)
         {
-          states[mR*mc2mr   +mC*mcmr + cR*maxCol + cC].setValues(mR,mC,cR, cC, 0);
+
+          // if the mouse is caught, thats a reward of -1 (for the mouse)
+          if (mR == cR && mC == cC)
+          {
+            r = -1;
+          }else if(mR == maxRow-1 && mC == maxCol-1 ) // if the mouse finds the way out the reward is 1
+          {
+            r = 1;
+          }else // else a neutral reward
+          {
+            r = 0;
+          }
+          
+          
+          states[mR*mc2mr   +mC*mcmr + cR*maxCol + cC].setValues(mR,mC,cR, cC, r);
+          // for debug there is an counter / id
           states[mR*mc2mr   +mC*mcmr + cR*maxCol + cC].id = counter;
           counter++;
         }
@@ -77,6 +92,7 @@ int Agent::getC(){
   return c;
 }
 
+
 void Agent::printInteralStates(){
   int mc2mr = maxCol*maxRow*maxCol;
   int mcmr = maxCol*maxRow;
@@ -96,8 +112,6 @@ void Agent::learnTransitions(World* world){
   int mcmr = maxCol * maxRow;
 
   std::cout << mc2mr << "    -    " << mcmr << std::endl;
-
-
 
   bool left;
   bool right;

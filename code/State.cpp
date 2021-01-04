@@ -4,7 +4,7 @@ State::State(/* args */)
 }
 
 State::State(int mouseR, int mouseC, int catR, int catC){
-  setValues(mouseR, mouseC, catR, catC,0);
+  setValues(mouseR, mouseC, catR, catC, 0);
 }
 
 
@@ -19,7 +19,7 @@ void State::printState(){
   std::cout << toLeft<< " " << toRight << " " << toTop << " " << toBottom << std::endl;
 }
 
-void State::setValues(int mouseR, int mouseC, int catR, int catC, int r){
+void State::setValues(int mouseR, int mouseC, int catR, int catC, double r){
   mouseRowCal = new RowCol(mouseR,mouseC);
   catRowCal = new RowCol(catR, catC);
   this->r = r;
@@ -55,8 +55,9 @@ char State::getBestMove(){
   max = (toBottom > max) ? toBottom : max;   
 
   std::cout << "Extra: " << toLeft<< " " << toRight << " " << toTop << " " << toBottom << " " << id << std::endl;
-  
-
   return best;
+}
 
+int State::getR(){
+  return r;
 }

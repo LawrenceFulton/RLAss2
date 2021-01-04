@@ -24,6 +24,10 @@ char Mouse::getBestMove(int cR, int cC, double eps){
   return bestMove;
 }
 
+State Mouse::getInternalState(int cR, int cC){
+  return(states[r*maxCol*maxCol*maxRow + c *maxCol*maxRow +cR* maxCol + cC]);
+}
+
 
 Mouse::~Mouse(){}
 
