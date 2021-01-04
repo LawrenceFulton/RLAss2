@@ -68,7 +68,7 @@ bool Location::isDirecPoss(char direction){
     isPoss = toBottom;
     break;
   default:
-    std::cout << "Wrong char please enter 'l , r, t, d'. Enterd char was " << direction << std::endl; 
+    std::cout << "Wrong char please enter 'l , r, t, d'. Entered char was " << direction << std::endl; 
   }
   return isPoss;
 }

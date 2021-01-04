@@ -4,7 +4,7 @@ World::World(/* args */)
   *this = World(3,3);
 }
 
-World::World(int rows, int columns ){
+World::World(int rows, int columns){
   this->rows = rows;
   this->columns = columns;
 
@@ -15,7 +15,7 @@ World::World(int rows, int columns ){
   {
     locations[i] = new Location[columns];
   }
-  //Making the boarders of the world, no walls (for now)
+  //Making the borders of the world, no walls (for now)
 
 
   int counter = 0;
