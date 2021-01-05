@@ -66,7 +66,7 @@ double State::maxValue(){
   
   max = (toRight > max) ? toRight : max;
   max = (toTop > max) ? toTop : max;
-  max = (toBottom > max) ? toBottom : max;   
+  max = (toBottom > max) ? toBottom : max; 
   return max; 
 }
 

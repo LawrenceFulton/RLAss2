@@ -11,7 +11,7 @@ void qLearning(){
   double alpha = 0.5;
   double discount = 0.999;
   double eps = 0.8;
-  int repetitions = 1;
+  int repetitions = 100;
 
   char input;
   int mR, mC; // mouse column and row
@@ -58,7 +58,7 @@ void qLearning(){
       reward = newState->getR();
 
       //Bellman equation
-      newVal = newState->getDirectionValue(bestMove) + alpha * (reward + discount * newState->maxValue() - newState->getDirectionValue(bestMove));
+      newVal = oldState->getDirectionValue(bestMove) + alpha * (reward + discount * newState->maxValue() - oldState->getDirectionValue(bestMove));
       oldState->setDirectionValue(bestMove, newVal);
 
       std::cout << mR << " " << mC << std::endl;
