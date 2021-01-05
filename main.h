@@ -11,7 +11,7 @@
 #include <time.h>       /* time */
 
 
-#define ROWS 2
-#define COLUMNS 2
+#define ROWS 5
+#define COLUMNS 5
 
 #endif 

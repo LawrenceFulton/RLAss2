@@ -51,13 +51,65 @@ char State::getBestMove(){
   best = (toTop > max) ? 't' : best;
   max = (toTop > max) ? toTop : max;
 
-  best = (toBottom > max) ? 'b' : best;
+  best = (toBottom > max) ? 'd' : best;
   max = (toBottom > max) ? toBottom : max;   
 
-  std::cout << "Extra: " << toLeft<< " " << toRight << " " << toTop << " " << toBottom << " " << id << std::endl;
   return best;
 }
 
-int State::getR(){
+double State::getR(){
   return r;
+}
+
+double State::maxValue(){
+  double max = toLeft;
+  
+  max = (toRight > max) ? toRight : max;
+  max = (toTop > max) ? toTop : max;
+  max = (toBottom > max) ? toBottom : max;   
+  return max; 
+}
+
+
+
+void State::setDirectionValue(char direction, double newVal){
+  switch (direction)
+  {
+  case 'l': // left
+    toLeft = newVal;
+    break;
+  case 'r': // right
+    toRight = newVal;
+    break;
+  case 't': // up
+    toTop = newVal;
+    break;
+  case 'd': // down
+    toBottom = newVal;
+    break;
+  default:
+    std::cout << "There has been an error, the direction cant be " << direction << std::endl;
+  }     
+}
+
+
+double State::getDirectionValue(char direction){
+  
+  double returnValue;
+  switch (direction)
+  {
+  case 'l': // left
+    returnValue = toLeft;
+    break;
+  case 'r': // right
+    returnValue = toRight;
+    break;
+  case 't': // up
+    returnValue = toTop;
+    break;
+  case 'd': // down
+    returnValue = toBottom;
+    break;
+  } 
+  return returnValue;
 }

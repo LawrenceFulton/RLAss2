@@ -59,22 +59,23 @@ void Agent::setCoordinates(int r, int c){
 
 
 // doesn't check if the direction is possible and thus can lead to segmentation fault
+// if in doubt onc can use move(direction, curPos)
 void Agent::move(char direction){
   switch (direction)
-    {
-    case 'l': // left
-      c--;
-      break;
-    case 'r': // right
-      c++;
-      break;
-    case 't': // up
-      r--;
-      break;
-    case 'd': // down
-      r++;
-      break;
-    }
+  {
+  case 'l': // left
+    c--;
+    break;
+  case 'r': // right
+    c++;
+    break;
+  case 't': // up
+    r--;
+    break;
+  case 'd': // down
+    r++;
+    break;
+  }
 }
 
 

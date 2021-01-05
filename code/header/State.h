@@ -33,7 +33,11 @@ public:
   void setValues(int mouseX, int mouseY, int catX, int catY, double r);
   void setTransition(Location* loc);
   char getBestMove();
-  int getR();
+  double getR();
+  double maxValue();
+
+  void setDirectionValue(char direction, double newVal);
+  double getDirectionValue(char direction);
   ~State();
 };
 

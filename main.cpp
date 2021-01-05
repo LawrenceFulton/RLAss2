@@ -1,7 +1,72 @@
 #include "main.h"
 
 void qLearning(){
+  World newWorld(ROWS,COLUMNS);
+  Mouse mouse(0,0,ROWS, COLUMNS);
+  World* pointerW = &newWorld; 
+  Location* curLoc;
 
+
+
+  double alpha = 0.5;
+  double discount = 0.999;
+  double eps = 0.8;
+  int repetitions = 1;
+
+  char input;
+  int mR, mC; // mouse column and row
+  int cR, cC; // cat column and row
+  mouse.learnTransitions(pointerW);
+  cR = 1;
+  cC = 1;
+  char bestMove;
+
+
+  
+  mR = mouse.getR();
+  mC = mouse.getC();
+
+  int reward; 
+  State *newState; //State_t+1
+  State *oldState; //State_t
+  double newVal;
+
+  for (size_t i = 0; i < repetitions; i++)
+  {
+    mouse.setCoordinates(0,0);
+    mR = mouse.getR();
+    mC = mouse.getC();
+    while (!(newWorld.getLocation(mR,mC)->isGoal()) ) //should be changed until mouse is in the goal state 
+    {
+      // the current state 
+      oldState =  mouse.getInternalState(cR,cC);
+
+
+      // getting the best move (we know that that move is a valid move)
+      bestMove = mouse.getBestMove(cR,cC,eps);
+
+      // moves the mouse in the correct direction       
+      mouse.move(bestMove);
+
+      // gets the new R and C values
+      mR = mouse.getR();
+      mC = mouse.getC();
+
+
+      // the new state from which we can get the reward and the max value
+      newState = mouse.getInternalState(cR,cC);
+      reward = newState->getR();
+
+      //Bellman equation
+      newVal = newState->getDirectionValue(bestMove) + alpha * (reward + discount * newState->maxValue() - newState->getDirectionValue(bestMove));
+      oldState->setDirectionValue(bestMove, newVal);
+
+      std::cout << mR << " " << mC << std::endl;
+
+    }
+    
+  }
+  
 }
 
 void walkingWithWASD(){
@@ -73,46 +138,7 @@ void walkingWithWASD(){
 int main(int argc, char const *argv[])
 {
   srand(time(0));
-  World newWorld(ROWS,COLUMNS);
-  Mouse mouse(0,0,ROWS, COLUMNS);
-  World* pointerW = &newWorld; 
-  Location* curLoc;
-  char input;
-  int mR, mC; // mouse column and row
-  int cR, cC; // cat column and row
-  mouse.learnTransitions(pointerW);
-  cR = cC = 1;
-  char bestMove;
-
-  
-  mR = mouse.getR();
-  mC = mouse.getC();
-
-  int reward; 
-
-  while (true) //should be changed until mouse is in the goal state 
-  {
-    bestMove = mouse.getBestMove(cR,cC,1);
-    curLoc = newWorld.getLocation(mR,mC);
-    mouse.move(bestMove,curLoc);
-    reward = mouse.getInternalState(cR,cC).getR();
-    
-    //Bellman equation
-
-  }
-  
-
-
-  std::cout << "bestMove: " <<bestMove << std::endl; 
-
-
-
-
-
-
-
-
-  // world->printAllPossDirect();
+  qLearning();
   return 0;
 }
 
