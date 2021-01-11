@@ -47,6 +47,14 @@ Agent::Agent(int r, int c, int maxRow, int maxCol ){
   printInteralStates();
 }
 
+Agent::~Agent(){
+  free (states);
+};
+
+//////////////////////////////
+
+
+// for debug, can be deleted later 
 void Agent::printCoordinates(){
   std::cout << "(" << r << "," << c << ")" <<std::endl;
 }
@@ -55,8 +63,6 @@ void Agent::setCoordinates(int r, int c){
   this->r = r;
   this->c = c;
 }
-
-
 
 // doesn't check if the direction is possible and thus can lead to segmentation fault
 // if in doubt onc can use move(direction, curPos)
@@ -77,7 +83,6 @@ void Agent::move(char direction){
     break;
   }
 }
-
 
 // moves the agent into any of the four directions
 // chars to use for direction 'l , r, t, d'
@@ -139,7 +144,66 @@ void Agent::learnTransitions(World* world){
 }
 
 
+// int agent = 0 for mouse and =1 for cat
+// otherR/otherC are the rows and columns of the other agent 
+int Agent::getStateNumber(int agent, int otherR, int otherC){
 
-Agent::~Agent(){
-  free (states);
-};
+  if (agent == 0) // if the agent is a mouse 
+  {
+    return (r*maxCol*maxCol*maxRow + c *maxCol*maxRow +otherR* maxCol + otherC);
+  }else
+  {
+    return (otherR* maxCol*maxCol*maxRow + otherC* maxCol*maxRow +r *maxCol + c );
+  }
+}
+
+State* Agent::getInternalState(int agent, int otherR, int otherC){
+  int stateNumber = getStateNumber(agent,otherC,otherR);
+  return(&states[stateNumber]);
+}
+
+char Agent::getBestMove(int agent, int otherR, int otherC, double eps){
+  char bestMove;
+
+  double unif = rand()/ RAND_MAX;
+  double value;
+  int choice;
+  State* curState = getInternalState(agent,otherR, otherC);
+
+  // if the value taken from the unifrom distribution is smaller that
+  // the eps we take the best move, else we find a random possible 
+  // move
+  if (unif < eps)
+  {
+    bestMove = curState->getBestMove();
+  }else
+  {
+    do
+    {
+      choice = rand() % 4;
+      switch (choice)
+      {
+      case 0:
+        value = curState->getDirectionValue('l');
+        bestMove = 'l';
+        break;
+      case 1:
+        value = curState->getDirectionValue('r');
+        bestMove = 'r';
+        break;
+      case 2:
+        value = curState->getDirectionValue('t');
+        bestMove = 't';
+        break;
+      case 3:
+        value = curState->getDirectionValue('d');
+        bestMove = 'd';
+        break;
+      }    
+    } while (value == -DBL_MAX);
+  }
+
+  curState->printState();
+  return bestMove;
+}
+

@@ -2,14 +2,19 @@
 
 Cat::Cat(){};
 
-Cat::Cat(int x, int y, int z){
-  Agent::setCoordinates(x,y);
-  this->z = z;
+Cat::Cat(int r, int c, int maxRow, int maxCol):Agent::Agent(r,c,maxRow,maxCol){
+  steps = 0;
 } 
 Cat::~Cat(){};
 
 
+
+
+State* Cat::getInternalState(int mR, int mC){
+  return(Agent::getInternalState(1,mR,mC));
+}
+
+
 void Cat::printCoordinates(){
-  std::cout << z << std::endl;
   Agent::printCoordinates();
 }

@@ -11,7 +11,12 @@
 #include <time.h>       /* time */
 
 
-#define ROWS 5
-#define COLUMNS 5
+#define ROWS 3
+#define COLUMNS 3
+
+
+//might not be needed
+#define MOUSE 0
+#define CAT 1
 
 #endif 

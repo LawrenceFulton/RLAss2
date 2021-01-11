@@ -52,18 +52,13 @@ char Mouse::getBestMove(int cR, int cC, double eps){
 
       }    
     } while (value == -DBL_MAX);
-
   }
-  
-  
-
-
   states[r*maxCol*maxCol*maxRow + c *maxCol*maxRow +cR* maxCol + cC].printState();
   return bestMove;
 }
 
 State* Mouse::getInternalState(int cR, int cC){
-  return(&states[r*maxCol*maxCol*maxRow + c *maxCol*maxRow +cR* maxCol + cC]);
+  return (Agent::getInternalState(0,cR,cC));
 }
 
 

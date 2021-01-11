@@ -3,6 +3,7 @@
 void qLearning(){
   World newWorld(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS);
+  Cat cat(ROWS-1, COLUMNS-1, ROWS,COLUMNS);
   World* pointerW = &newWorld; 
   Location* curLoc;
 
@@ -12,61 +13,111 @@ void qLearning(){
   double discount = 0.999;
   double eps = 0.8;
   int repetitions = 100;
+  int testReward;
+
+  double arr[repetitions];
 
   char input;
-  int mR, mC; // mouse column and row
-  int cR, cC; // cat column and row
+  int mROld, mCOld, mRNew, mCNew; // mouse column and row
+  int cROld, cCOld, cRNew, cCNew; // cat column and row
   mouse.learnTransitions(pointerW);
-  cR = 1;
-  cC = 1;
-  char bestMove;
+
+  char bestMoveMouse;
+  char bestMoveCat;
 
 
-  
-  mR = mouse.getR();
-  mC = mouse.getC();
+  cROld = cat.getC();
+  cCOld = cat.getR();
+  mROld = mouse.getR();
+  mCOld = mouse.getC();
 
-  int reward; 
-  State *newState; //State_t+1
-  State *oldState; //State_t
-  double newVal;
+  cRNew = cat.getC();
+  cCNew = cat.getR();
+  mRNew = mouse.getR();
+  mCNew = mouse.getC();
 
-  for (size_t i = 0; i < repetitions; i++)
+
+
+  int reward;  //same reward can be used for mouse and cat (have to use it *-1)
+  State *mouseNewState; //State_t+1
+  State *mouseOldState; //State_t
+
+  State *catNewState; //State_t+1
+  State *catOldState; //State_t
+  double mouseNewVal;
+  double catNewVal;
+
+  for (size_t i = 0; i < 10; i++)
   {
     mouse.setCoordinates(0,0);
-    mR = mouse.getR();
-    mC = mouse.getC();
-    while (!(newWorld.getLocation(mR,mC)->isGoal()) ) //should be changed until mouse is in the goal state 
+    cat.setCoordinates(ROWS-2, COLUMNS-2);
+    cROld = cat.getC();
+    cCOld = cat.getR();
+    mROld = mouse.getR();
+    mCOld = mouse.getC();
+    reward = 0;
+
+
+
+
+
+    while (reward == 0) // reward will stay 0 until either the mouse got eaten or managed to esceape 
     {
-      // the current state 
-      oldState =  mouse.getInternalState(cR,cC);
+      // the current mouse state 
+      mouseOldState =  mouse.getInternalState(cROld,cROld);
+      // catOldState = cat.getInternalState(mROld, mCOld);
 
 
       // getting the best move (we know that that move is a valid move)
-      bestMove = mouse.getBestMove(cR,cC,eps);
+      bestMoveMouse = mouse.getBestMove(cROld,cROld,eps);
+      // bestMoveCat = cat.getBestMove(mROld, cCOld, eps);
+
 
       // moves the mouse in the correct direction       
-      mouse.move(bestMove);
+      mouse.move(bestMoveMouse);
+      // cat.move(bestMoveCat);
 
       // gets the new R and C values
-      mR = mouse.getR();
-      mC = mouse.getC();
-
+      // cRNew = cat.getC();
+      // cCNew = cat.getR();
+      mRNew = mouse.getR();
+      mCNew = mouse.getC();
 
       // the new state from which we can get the reward and the max value
-      newState = mouse.getInternalState(cR,cC);
-      reward = newState->getR();
+      mouseNewState = mouse.getInternalState(cRNew,cCNew);
+      // catNewState = cat.getInternalState(mRNew, mCNew );
+      reward = mouseNewState->getR();
 
-      //Bellman equation
-      newVal = oldState->getDirectionValue(bestMove) + alpha * (reward + discount * newState->maxValue() - oldState->getDirectionValue(bestMove));
-      oldState->setDirectionValue(bestMove, newVal);
+      // testReward = catNewState->getR();
+      
+      // // both rewards should be the same ! 
+      // if (reward != testReward)
+      // {
+      //   std::cout << "NONONONONO" << std::endl;
+      //   return ;
+      // }
+      
 
-      std::cout << mR << " " << mC << std::endl;
+      //Bellman equation for mouse 
+      mouseNewVal = mouseOldState->getDirectionValue(bestMoveMouse) + alpha * (reward + discount * mouseNewState->maxValue() - mouseOldState->getDirectionValue(bestMoveMouse));
+      mouseOldState->setDirectionValue(bestMoveMouse, mouseNewVal);
 
+      // catNewVal = catOldState->getDirectionValue(bestMoveCat) + alpha * (reward + discount * catNewState->maxValue() - catOldState->getDirectionValue(bestMoveCat));
+      // catOldState->setDirectionValue(bestMoveCat,catNewVal);
+      // std::cout << mR << " " << mC << std::endl;
     }
-    
+    arr[i] = reward;
   }
   
+
+  std::cout << "rewards:" << std::endl;
+  for (size_t i = 0; i < repetitions; i++)
+  {
+    std::cout << arr[i] << ", ";
+  }
+  
+
+
 }
 
 void walkingWithWASD(){
