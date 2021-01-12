@@ -31,7 +31,7 @@ public:
   State(int mouseX, int mouseY, int catX, int catY);
   void printState();
   void setValues(int mouseX, int mouseY, int catX, int catY, double r);
-  void setTransition(Location* loc);
+  void setTransition(int specialCase, Location* loc);
   char getBestMove();
   double getR();
   double maxValue();

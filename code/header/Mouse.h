@@ -4,13 +4,20 @@
 #include "Agent.h"
 #include "Location.h"
 #include "World.h"
+#include "Cat.h"
+
+
 #include <random>
+#define MOUSE_ID 0
+
 
 
 class Mouse: public Agent
 {
 private:
   int steps;
+  Cat* cat;
+  Agent as;
 
 public:
   Mouse(/* args */);
@@ -19,9 +26,10 @@ public:
   ~Mouse();
 
 
-  char getBestMove(int cR, int cC, double eps);
-  State* getInternalState(int cR, int cC);
-
+  char getBestMove(double eps);
+  State* getInternalState();
+  void learnTransitions(World* world);
+  void setCat(Cat* cat);
 };
 
 

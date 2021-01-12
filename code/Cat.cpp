@@ -8,13 +8,19 @@ Cat::Cat(int r, int c, int maxRow, int maxCol):Agent::Agent(r,c,maxRow,maxCol){
 Cat::~Cat(){};
 
 
-
-
-State* Cat::getInternalState(int mR, int mC){
-  return(Agent::getInternalState(1,mR,mC));
+State* Cat::getInternalState(){
+  return Agent::getInternalState(CAT_ID,mouse->getR(),mouse->getC());
 }
 
-
-void Cat::printCoordinates(){
-  Agent::printCoordinates();
+char Cat::getBestMove(double eps){
+  return Agent::getBestMove(CAT_ID,mouse->getR(),mouse->getC(),eps);
 }
+
+void Cat::learnTransitions(World *world){
+  Agent::learnTransitions(CAT_ID, world);
+}
+
+void Cat::setMouse(Mouse* mouse){
+  this->mouse = mouse;
+}
+

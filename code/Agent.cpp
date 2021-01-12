@@ -116,13 +116,12 @@ void Agent::printInteralStates(){
 
 
 // overtakes the transition from the world created in the main file 
-void Agent::learnTransitions(World* world){
+void Agent::learnTransitions(int agent, World* world){
   Location* loc;
+  int specialCase;
 
   int mc2mr = maxCol*maxCol*maxRow;
   int mcmr = maxCol * maxRow;
-
-  std::cout << mc2mr << "    -    " << mcmr << std::endl;
 
   bool left;
   bool right;
@@ -135,12 +134,18 @@ void Agent::learnTransitions(World* world){
       loc = world->getLocation(r,c);
       for (size_t d = 0; d < mcmr; d++) // depth
       {
-        std::cout <<  r*mc2mr + c*mcmr+ d  << std::endl;
-        states[ r*mc2mr + c*mcmr+ d].setTransition(loc); 
+
+        // if we have the cat, it shouldn't be allowed to go
+        // on the goal state         
+
+        if (r == maxRow-1 && c == maxCol-2 && agent == 1) // on the right of the goal state
+          states[ r*mc2mr + c*mcmr+ d].setTransition(1,loc); 
+        else if (r == maxRow-2 && c == maxCol-1 && agent == 1) // above the goal state
+          states[ r*mc2mr + c*mcmr+ d].setTransition(2,loc); 
+        else
+          states[ r*mc2mr + c*mcmr+ d].setTransition(0,loc); 
       }
     }
-
-    printInteralStates();
 }
 
 

@@ -25,7 +25,7 @@ void State::setValues(int mouseR, int mouseC, int catR, int catC, double r){
   this->r = r;
 }
 
-void State::setTransition(Location* loc){
+void State::setTransition(int specialCase, Location* loc){
 
 
   // checks if the move is possible 
@@ -34,7 +34,18 @@ void State::setTransition(Location* loc){
   bool top = loc->isDirecPoss('t');
   bool bottom = loc->isDirecPoss('d');
 
-  // Creates, when possible a q value of between 0 and 1
+
+  // the special cases are happening so that the cat doesn't
+  // camp the goal state
+  if (specialCase == 1)
+  {
+    right = false;
+  }else if (specialCase == 2)
+  {
+    bottom = false;
+  }
+
+  // Creates, when possible a q value of between 0 and 1 else -DBL_MAX
   toLeft = left ? double(rand())/RAND_MAX :  -DBL_MAX;
   toRight = right ? double(rand())/RAND_MAX : -DBL_MAX;
   toTop = top ? double(rand())/RAND_MAX : -DBL_MAX;

@@ -3,16 +3,19 @@
 void qLearning(){
   World newWorld(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS);
-  Cat cat(ROWS-1, COLUMNS-1, ROWS,COLUMNS);
-  World* pointerW = &newWorld; 
+  Cat cat(ROWS-2, COLUMNS-2, ROWS,COLUMNS);
+  World* pointerW = &newWorld;  // can be exchanged later, dont need to have a pointer extra
   Location* curLoc;
 
+
+  cat.setMouse(&mouse);
+  mouse.setCat(&cat);
 
 
   double alpha = 0.5;
   double discount = 0.999;
   double eps = 0.8;
-  int repetitions = 100;
+  int repetitions = 10;
   int testReward;
 
   double arr[repetitions];
@@ -47,65 +50,70 @@ void qLearning(){
   double mouseNewVal;
   double catNewVal;
 
-  for (size_t i = 0; i < 10; i++)
+
+  for (size_t i = 0; i < repetitions; i++)
   {
     mouse.setCoordinates(0,0);
-    cat.setCoordinates(ROWS-2, COLUMNS-2);
+    cat.setCoordinates(ROWS-2, COLUMNS-2); // will be just in front of the exit
     cROld = cat.getC();
     cCOld = cat.getR();
     mROld = mouse.getR();
     mCOld = mouse.getC();
     reward = 0;
 
-
-
-
-
-    while (reward == 0) // reward will stay 0 until either the mouse got eaten or managed to esceape 
+    do // reward will stay 0 until either the mouse got eaten or managed to esceape 
     {
       // the current mouse state 
-      mouseOldState =  mouse.getInternalState(cROld,cROld);
-      // catOldState = cat.getInternalState(mROld, mCOld);
+      mouseOldState =  mouse.getInternalState();
+      catOldState = cat.getInternalState();
 
 
       // getting the best move (we know that that move is a valid move)
-      bestMoveMouse = mouse.getBestMove(cROld,cROld,eps);
-      // bestMoveCat = cat.getBestMove(mROld, cCOld, eps);
+      bestMoveMouse = mouse.getBestMove(eps);
+      bestMoveCat = cat.getBestMove(eps);
 
 
       // moves the mouse in the correct direction       
       mouse.move(bestMoveMouse);
-      // cat.move(bestMoveCat);
+      cat.move(bestMoveCat);
 
       // gets the new R and C values
-      // cRNew = cat.getC();
-      // cCNew = cat.getR();
+      cRNew = cat.getC();
+      cCNew = cat.getR();
       mRNew = mouse.getR();
       mCNew = mouse.getC();
 
       // the new state from which we can get the reward and the max value
-      mouseNewState = mouse.getInternalState(cRNew,cCNew);
-      // catNewState = cat.getInternalState(mRNew, mCNew );
+      mouseNewState = mouse.getInternalState();
+      catNewState = cat.getInternalState();
       reward = mouseNewState->getR();
 
-      // testReward = catNewState->getR();
+      testReward = catNewState->getR();
       
-      // // both rewards should be the same ! 
-      // if (reward != testReward)
-      // {
-      //   std::cout << "NONONONONO" << std::endl;
-      //   return ;
-      // }
+      // both rewards should be the same ! 
+      if (reward != testReward)
+      {
+
+        std::cout << "NONONONONO" << reward << " - "<< testReward << std::endl;
+
+        
+        mouseNewState->printState();
+        catNewState->printState();
+         
+        std::cout << "NONONONONO" << reward << " - "<< testReward << std::endl;
+        return ;
+      }
       
 
       //Bellman equation for mouse 
       mouseNewVal = mouseOldState->getDirectionValue(bestMoveMouse) + alpha * (reward + discount * mouseNewState->maxValue() - mouseOldState->getDirectionValue(bestMoveMouse));
       mouseOldState->setDirectionValue(bestMoveMouse, mouseNewVal);
 
-      // catNewVal = catOldState->getDirectionValue(bestMoveCat) + alpha * (reward + discount * catNewState->maxValue() - catOldState->getDirectionValue(bestMoveCat));
-      // catOldState->setDirectionValue(bestMoveCat,catNewVal);
+      catNewVal = catOldState->getDirectionValue(bestMoveCat) + alpha * (reward + discount * catNewState->maxValue() - catOldState->getDirectionValue(bestMoveCat));
+      catOldState->setDirectionValue(bestMoveCat,catNewVal);
       // std::cout << mR << " " << mC << std::endl;
-    }
+    }while (reward == 0);
+
     arr[i] = reward;
   }
   
