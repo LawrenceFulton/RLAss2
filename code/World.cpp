@@ -1,7 +1,7 @@
 #include "header/World.h"
 World::World(/* args */)
 {
-  *this = World(3,3);
+  *this = World(2,2); // 3,3
 }
 
 World::World(int rows, int columns){
@@ -9,7 +9,7 @@ World::World(int rows, int columns){
   this->columns = columns;
 
 
-  // Initialisation of the 2d Array. These are empy "Location" which still need to be filled with information
+  // Initialisation of the 2d Array. These are empty "Location" which still need to be filled with information
   locations = new Location*[rows];
   for (size_t i = 0; i < rows; ++i)
   {
@@ -25,7 +25,7 @@ World::World(int rows, int columns){
     for (size_t c = 0; c < columns; c++)
     {
       locations[r][c].id = counter;
-      std::cout << counter << ": " << r << c  << "and rows and colums are " << rows << ", "  << columns <<std::endl;
+      std::cout << counter << ": " << r << c  << " and rows and colums are " << rows << ", "  << columns <<std::endl;
       counter ++;
 
       if (r == 0) // top row 

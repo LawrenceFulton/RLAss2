@@ -11,7 +11,7 @@ void qLearning(){
   double alpha = 0.5;
   double discount = 0.999;
   double eps = 0.8;
-  int repetitions = 100;
+  int repetitions = 10;
 
   char input;
   int mR, mC; // mouse column and row
@@ -77,10 +77,11 @@ void walkingWithWASD(){
   Location* curLoc;
   char input;
 
-  int r,c;
+  int r,c,x = 0;
 
-  while (true)
+  while (x < 1)
   {
+    x++;
     r = mouse.getR();
     c = mouse.getC();
     std::cout << "r,c: " << r<< c << std::endl; 
