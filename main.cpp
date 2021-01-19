@@ -1,10 +1,10 @@
 #include "main.h"
 
-void qLearning(){
-  World newWorld(ROWS,COLUMNS);
+int qLearning(){
+  World world(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS);
   Cat cat(ROWS-2, COLUMNS-2, ROWS,COLUMNS);
-  World* pointerW = &newWorld;  // can be exchanged later, dont need to have a pointer extra
+  // World* pointerW = &newWorld;  // can be exchanged later, dont need to have a pointer extra
   Location* curLoc;
 
 
@@ -15,7 +15,7 @@ void qLearning(){
   double alpha = 0.5;
   double discount = 0.999;
   double eps = 0.8;
-  int repetitions = 10;
+  int repetitions = 1;
   int testReward;
 
   double arr[repetitions];
@@ -23,7 +23,8 @@ void qLearning(){
   char input;
   int mROld, mCOld, mRNew, mCNew; // mouse column and row
   int cROld, cCOld, cRNew, cCNew; // cat column and row
-  mouse.learnTransitions(pointerW);
+  mouse.learnTransitions(&world);
+  cat.learnTransitions(&world);
 
   char bestMoveMouse;
   char bestMoveCat;
@@ -86,22 +87,23 @@ void qLearning(){
       // the new state from which we can get the reward and the max value
       mouseNewState = mouse.getInternalState();
       catNewState = cat.getInternalState();
+      
+      
       reward = mouseNewState->getR();
-
       testReward = catNewState->getR();
       
       // both rewards should be the same ! 
       if (reward != testReward)
       {
 
-        std::cout << "NONONONONO" << reward << " - "<< testReward << std::endl;
+        std::cout << "NONONONONO " << reward << " - "<< testReward << std::endl;
 
         
         mouseNewState->printState();
         catNewState->printState();
          
-        std::cout << "NONONONONO" << reward << " - "<< testReward << std::endl;
-        return ;
+        std::cout << "NONONONONO " << reward << " - "<< testReward << std::endl;
+        return 0;
       }
       
 
@@ -118,13 +120,15 @@ void qLearning(){
   }
   
 
-  std::cout << "rewards:" << std::endl;
-  for (size_t i = 0; i < repetitions; i++)
-  {
-    std::cout << arr[i] << ", ";
-  }
-  
+  std::cout << "rewards123:" << std::endl;
+  // for (size_t i = 0; i < repetitions; i++)
+  // {
+  //   std::cout << arr[i] << ", ";
+  // }
+  std::cout << arr[0]<< std::endl;
 
+  std::cout << "dasdadsadasd" << std::endl;
+  return 1;
 
 }
 
@@ -198,6 +202,8 @@ int main(int argc, char const *argv[])
 {
   srand(time(0));
   qLearning();
+
+  std::cout << "dab" << std::endl;
   return 0;
 }
 

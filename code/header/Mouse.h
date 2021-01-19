@@ -4,8 +4,7 @@
 #include "Agent.h"
 #include "Location.h"
 #include "World.h"
-#include "Cat.h"
-
+class Cat;
 
 #include <random>
 #define MOUSE_ID 0

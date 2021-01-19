@@ -4,13 +4,13 @@
 #include "Agent.h"
 #include "Location.h"
 #include "World.h"
-#include "Mouse.h"
 
 
 #include <random>
 #define CAT_ID 1 
 
 
+class Mouse;
 
 class Cat: public Agent
 {

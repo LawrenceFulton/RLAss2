@@ -1,4 +1,5 @@
 #include "header/Mouse.h"
+#include "header/Cat.h"
 
 
 Mouse::Mouse(){
