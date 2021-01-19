@@ -4,7 +4,6 @@ int qLearning(){
   World world(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS);
   Cat cat(ROWS-2, COLUMNS-2, ROWS,COLUMNS);
-  // World* pointerW = &newWorld;  // can be exchanged later, dont need to have a pointer extra
   Location* curLoc;
 
 
@@ -15,7 +14,7 @@ int qLearning(){
   double alpha = 0.9;
   double discount = 0.999;
   double eps = 0.8;
-  int repetitions = 100;
+  int repetitions = 0;
   int testReward;
 
   double arr[repetitions];
@@ -51,10 +50,13 @@ int qLearning(){
   double mouseNewVal;
   double catNewVal;
 
+  std::cout << "print internal states cat:" << std::endl;
+  cat.printInteralStates();
+
 
   for (size_t i = 0; i < repetitions; i++)
   {
-    std::cout << "________________________________________"<< std::endl;
+    std::cout << "__________________epoche "<< i << "____________"<< std::endl;
     mouse.setCoordinates(0,0);
     cat.setCoordinates(ROWS-2, COLUMNS-2); // will be just in front of the exit
     cROld = cat.getC();
@@ -205,7 +207,6 @@ int main(int argc, char const *argv[])
   srand(time(0));
   qLearning();
 
-  std::cout << "dab" << std::endl;
   return 0;
 }
 

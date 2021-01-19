@@ -27,28 +27,20 @@ Agent::Agent(int r, int c, int maxRow, int maxCol ){
 
           // if the mouse is caught, thats a reward of -1 (for the mouse)
           if (mR == cR && mC == cC)
-          {
             r = -1;
-          }else if(mR == maxRow-1 && mC == maxCol-1 ) // if the mouse finds the way out the reward is 1
-          {
+          else if(mR == maxRow-1 && mC == maxCol-1 ) // if the mouse finds the way out the reward is 1
             r = 1;
-          }else // else a neutral reward
-          {
+          else // else a neutral reward
             r = 0;
-          }
-          
           
           states[mR*mc2mr   +mC*mcmr + cR*maxCol + cC].setValues(mR,mC,cR, cC, r);
           // for debug there is an counter / id
           states[mR*mc2mr   +mC*mcmr + cR*maxCol + cC].id = counter;
           counter++;
         }
-
-  printInteralStates();
 }
 
 Agent::~Agent(){
-  // free (states);
 };
 
 //////////////////////////////
@@ -119,6 +111,7 @@ void Agent::printInteralStates(){
 void Agent::learnTransitions(int agent, World* world){
   Location* loc;
   int specialCase;
+  int stateId;
 
   int mc2mr = maxCol*maxCol*maxRow;
   int mcmr = maxCol * maxRow;
@@ -129,23 +122,22 @@ void Agent::learnTransitions(int agent, World* world){
   bool bottom;
 
   for (size_t r = 0; r < maxRow; r++) // rows
+  {
     for (size_t c = 0; c < maxCol; c++) // columns
     {
       loc = world->getLocation(r,c);
       for (size_t d = 0; d < mcmr; d++) // depth
       {
-
-        // if we have the cat, it shouldn't be allowed to go
-        // on the goal state         
-
+        stateId = r*mc2mr + c*mcmr + d;
         if (r == maxRow-1 && c == maxCol-2 && agent == 1) // on the right of the goal state
-          states[ r*mc2mr + c*mcmr+ d].setTransition(1,loc); 
+          states[stateId].setTransition(1,loc); 
         else if (r == maxRow-2 && c == maxCol-1 && agent == 1) // above the goal state
-          states[ r*mc2mr + c*mcmr+ d].setTransition(2,loc); 
+          states[stateId].setTransition(2,loc); 
         else
-          states[ r*mc2mr + c*mcmr+ d].setTransition(0,loc); 
+          states[stateId].setTransition(0,loc); 
       }
     }
+  }
 }
 
 

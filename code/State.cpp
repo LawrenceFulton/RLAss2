@@ -13,15 +13,15 @@ State::~State()
 }
 
 void State::printState(){
-  std::cout << "Mouse:" << mouseRowCal->getRow() << ", " << mouseRowCal->getCol() 
-            << "and Cat:"<< catRowCal->getRow() << ", " << catRowCal->getCol() 
+  std::cout << "Own:" << ownRowCol->getRow() << ", " << ownRowCol->getCol() 
+            << "and Other:"<< otherRowCol->getRow() << ", " << otherRowCol->getCol() 
             <<" and r:" << r << " and ID << " << id <<std::endl;
   std::cout << toLeft<< " " << toRight << " " << toTop << " " << toBottom << std::endl;
 }
 
-void State::setValues(int mouseR, int mouseC, int catR, int catC, double r){
-  mouseRowCal = new RowCol(mouseR,mouseC);
-  catRowCal = new RowCol(catR, catC);
+void State::setValues(int ownR, int ownC, int otherR, int otherC, double r){
+  ownRowCol = new RowCol(ownR,ownC);
+  otherRowCol = new RowCol(otherR, otherC);
   this->r = r;
 }
 

@@ -12,12 +12,8 @@ class State
 {
 private:
   /* data */
-  RowCol *mouseRowCal;
-
-  // For the beginning just working with one cat, would have to make an array of catX and catY if having
-  // more that one cat 
-  // int nCat; 
-  RowCol *catRowCal;
+  RowCol *ownRowCol;
+  RowCol *otherRowCol;
 
   double toTop;
   double toBottom;
