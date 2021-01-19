@@ -13,9 +13,9 @@ State::~State()
 }
 
 void State::printState(){
-  std::cout << "Mouse:" << mouseRowCal->getRow() << ", " << mouseRowCal->getCol() 
-            << "and Cat:"<< catRowCal->getRow() << ", " << catRowCal->getCol() 
-            <<" and r:" << r << " and ID << " << id <<std::endl;
+  std::cout << "Mouse: " << mouseRowCal->getRow() << ", " << mouseRowCal->getCol() 
+            << " and Cat:"<< catRowCal->getRow() << ", " << catRowCal->getCol() 
+            <<" and r: " << r << " and ID << " << id <<std::endl;
   std::cout << toLeft<< " " << toRight << " " << toTop << " " << toBottom << std::endl;
 }
 
