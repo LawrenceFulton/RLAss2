@@ -12,10 +12,10 @@ int qLearning(){
   mouse.setCat(&cat);
 
 
-  double alpha = 0.5;
+  double alpha = 0.9;
   double discount = 0.999;
   double eps = 0.8;
-  int repetitions = 1;
+  int repetitions = 100;
   int testReward;
 
   double arr[repetitions];
@@ -54,6 +54,7 @@ int qLearning(){
 
   for (size_t i = 0; i < repetitions; i++)
   {
+    std::cout << "________________________________________"<< std::endl;
     mouse.setCoordinates(0,0);
     cat.setCoordinates(ROWS-2, COLUMNS-2); // will be just in front of the exit
     cROld = cat.getC();
@@ -71,11 +72,12 @@ int qLearning(){
 
       // getting the best move (we know that that move is a valid move)
       bestMoveMouse = mouse.getBestMove(eps);
+
+      mouse.move(bestMoveMouse);
       bestMoveCat = cat.getBestMove(eps);
 
 
       // moves the mouse in the correct direction       
-      mouse.move(bestMoveMouse);
       cat.move(bestMoveCat);
 
       // gets the new R and C values
@@ -111,7 +113,7 @@ int qLearning(){
       mouseNewVal = mouseOldState->getDirectionValue(bestMoveMouse) + alpha * (reward + discount * mouseNewState->maxValue() - mouseOldState->getDirectionValue(bestMoveMouse));
       mouseOldState->setDirectionValue(bestMoveMouse, mouseNewVal);
 
-      catNewVal = catOldState->getDirectionValue(bestMoveCat) + alpha * (reward + discount * catNewState->maxValue() - catOldState->getDirectionValue(bestMoveCat));
+      catNewVal = catOldState->getDirectionValue(bestMoveCat) + alpha * (-1 * reward + discount * catNewState->maxValue() - catOldState->getDirectionValue(bestMoveCat));
       catOldState->setDirectionValue(bestMoveCat,catNewVal);
       // std::cout << mR << " " << mC << std::endl;
     }while (reward == 0);
@@ -121,13 +123,13 @@ int qLearning(){
   
 
   std::cout << "rewards123:" << std::endl;
-  // for (size_t i = 0; i < repetitions; i++)
-  // {
-  //   std::cout << arr[i] << ", ";
-  // }
-  std::cout << arr[0]<< std::endl;
+  for (size_t i = 0; i < repetitions; i++)
+  {
+    std::cout << arr[i] << ", ";
+  }
 
-  std::cout << "dasdadsadasd" << std::endl;
+  std::cout << "\n endeGelende" << std::endl; 
+
   return 1;
 
 }

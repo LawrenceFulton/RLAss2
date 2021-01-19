@@ -48,7 +48,7 @@ Agent::Agent(int r, int c, int maxRow, int maxCol ){
 }
 
 Agent::~Agent(){
-  free (states);
+  // free (states);
 };
 
 //////////////////////////////
@@ -163,7 +163,7 @@ int Agent::getStateNumber(int agent, int otherR, int otherC){
 }
 
 State* Agent::getInternalState(int agent, int otherR, int otherC){
-  int stateNumber = getStateNumber(agent,otherC,otherR);
+  int stateNumber = getStateNumber(agent,otherR,otherC);
   return(&states[stateNumber]);
 }
 
