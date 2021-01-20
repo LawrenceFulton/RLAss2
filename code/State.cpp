@@ -13,15 +13,18 @@ State::~State()
 }
 
 void State::printState(){
-  std::cout << "Own:" << ownRowCol->getRow() << ", " << ownRowCol->getCol() 
-            << "and Other:"<< otherRowCol->getRow() << ", " << otherRowCol->getCol() 
+  std::cout << "Own:" << ownR << ", " << ownC
+            << "and Other:"<< otherR << ", " << otherC 
             <<" and r:" << r << " and ID << " << id <<std::endl;
   std::cout << toLeft<< " " << toRight << " " << toTop << " " << toBottom << std::endl;
 }
 
 void State::setValues(int ownR, int ownC, int otherR, int otherC, double r){
-  ownRowCol = new RowCol(ownR,ownC);
-  otherRowCol = new RowCol(otherR, otherC);
+  this->ownR = ownR;
+  this->ownC = ownC;
+  this->otherR = otherR;
+  this->otherC = otherC;
+
   this->r = r;
 }
 

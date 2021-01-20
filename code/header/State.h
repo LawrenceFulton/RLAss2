@@ -1,7 +1,6 @@
 #ifndef STATE_H
 #define STATE_H
 
-#include "RowCol.h"
 #include "Location.h"
 #include <iostream>
 #include <ostream>
@@ -12,8 +11,16 @@ class State
 {
 private:
   /* data */
-  RowCol *ownRowCol;
-  RowCol *otherRowCol;
+
+
+  int ownR;
+  int ownC;
+
+  int otherR;
+  int otherC;
+
+  // RowCol *ownRowCol;
+  // RowCol *otherRowCol;
 
   double toTop;
   double toBottom;
