@@ -15,7 +15,6 @@ void qLearning(){
   double discount = 0.9;
   double eps = 0.8;
   int repetitions = 1000;
-  int testReward;
 
   double arr[repetitions];
 
@@ -30,7 +29,9 @@ void qLearning(){
 
 
 
-  int reward;  //same reward can be used for mouse and cat (have to use it *-1)
+  int mouseReward;  //same reward can be used for mouse and cat (have to use it *-1)
+  int catReward;
+
   State *mouseNewState; //State_t+1
   State *mouseOldState; //State_t
 
@@ -49,7 +50,6 @@ void qLearning(){
     mouse.setCoordinates(0,0);
     cat.setCoordinates(ROWS-2, COLUMNS-2); // will be just in front of the exit
 
-    reward = 0;
 
     do // reward will stay 0 until either the mouse got eaten or managed to esceape 
     {
@@ -69,22 +69,23 @@ void qLearning(){
 
 
       // the new state from which we can get the reward and the max value
-      reward = mouseNewState->getR();
-      testReward = catNewState->getR();
+      mouseReward = mouseNewState->getR();
+      catReward = catNewState->getR();
 
 
       //Bellman equation for mouse   (-testReward)
-      mouseNewVal = mouseOldState->getDirectionValue(bestMoveMouse) + alpha * (-testReward + discount * mouseNewState->maxValue() - mouseOldState->getDirectionValue(bestMoveMouse));
+      mouseNewVal = mouseOldState->getDirectionValue(bestMoveMouse) + alpha * (mouseReward + discount * mouseNewState->maxValue() - mouseOldState->getDirectionValue(bestMoveMouse));
       mouseOldState->setDirectionValue(bestMoveMouse, mouseNewVal);
 
 
       // important is the -1 infront of reward reward for the cat
-      catNewVal = catOldState->getDirectionValue(bestMoveCat) + alpha * (testReward + discount * catNewState->maxValue() - catOldState->getDirectionValue(bestMoveCat));
+      catNewVal = catOldState->getDirectionValue(bestMoveCat) + alpha * (catReward + discount * catNewState->maxValue() - catOldState->getDirectionValue(bestMoveCat));
       catOldState->setDirectionValue(bestMoveCat,catNewVal);
 
-    }while (testReward == 0);
 
-    arr[i] = -testReward;
+    }while (catReward == 0);
+
+    arr[i] = -catReward;
   }
   
   int sum = 0;
