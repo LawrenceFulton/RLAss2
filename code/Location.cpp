@@ -8,8 +8,6 @@ Location::Location(/* args */)
   this->toRight = false;
   this->toTop = false;
   this->toBottom = false;
-
-  std::cout << "SHOULD NEVER PRINT THIS" << std::endl;
 }
 
 Location::Location(bool toLeft, bool toRight, bool toTop, bool toBottom)

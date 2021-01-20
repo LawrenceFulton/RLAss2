@@ -25,7 +25,7 @@ protected:
 
 public:
   Agent();
-  Agent(int r, int c, int maxRows, int maxColumns);
+  Agent(int agent, int r, int c, int maxRows, int maxColumns);
   ~Agent();
   void printCoordinates();
   void setCoordinates(int r, int c);

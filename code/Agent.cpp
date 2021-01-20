@@ -2,7 +2,7 @@
 
 Agent::Agent(){};
 
-Agent::Agent(int r, int c, int maxRow, int maxCol ){
+Agent::Agent(int agent, int r, int c, int maxRow, int maxCol ){
   this->r = r;
   this->c = c;
   this->maxRow = maxRow;
@@ -25,14 +25,24 @@ Agent::Agent(int r, int c, int maxRow, int maxCol ){
         for (size_t cC = 0; cC < maxCol; cC++)
         {
 
-          // if the mouse is caught, thats a reward of -1 (for the mouse)
-          if (mR == cR && mC == cC)
-            r = -1;
-          else if(mR == maxRow-1 && mC == maxCol-1 ) // if the mouse finds the way out the reward is 1
-            r = 1;
-          else // else a neutral reward
-            r = 0;
+          r = 0;
+          if (agent) // agent is a cat 
+          {
+            // if the mouse is caught, thats a reward of -1 (for the mouse)
+            if (mR == cR && mC == cC)
+              r = 1;
+            else if(cR == maxRow-1 && cC == maxCol-1 ) // if the mouse finds the way out the reward is 1
+              r = -1;
+          }else// agent is a mouse
+          {
+            // if the mouse is caught, thats a reward of -1 (for the mouse)
+            if (mR == cR && mC == cC)
+              r = -1;
+            else if(mR == maxRow-1 && mC == maxCol-1 ) // if the mouse finds the way out the reward is 1
+              r = 1;
+          }
           
+
           states[mR*mc2mr   +mC*mcmr + cR*maxCol + cC].setValues(mR,mC,cR, cC, r);
           // for debug there is an counter / id
           states[mR*mc2mr   +mC*mcmr + cR*maxCol + cC].id = counter;
@@ -144,14 +154,7 @@ void Agent::learnTransitions(int agent, World* world){
 // int agent = 0 for mouse and =1 for cat
 // otherR/otherC are the rows and columns of the other agent 
 int Agent::getStateNumber(int agent, int otherR, int otherC){
-
-  if (agent == 0) // if the agent is a mouse 
-  {
-    return (r*maxCol*maxCol*maxRow + c *maxCol*maxRow +otherR* maxCol + otherC);
-  }else
-  {
-    return (otherR* maxCol*maxCol*maxRow + otherC* maxCol*maxRow +r *maxCol + c );
-  }
+  return (r*maxCol*maxCol*maxRow + c *maxCol*maxRow +otherR* maxCol + otherC);
 }
 
 State* Agent::getInternalState(int agent, int otherR, int otherC){
@@ -200,7 +203,8 @@ char Agent::getBestMove(int agent, int otherR, int otherC, double eps){
     } while (value == -DBL_MAX);
   }
 
-  curState->printState();
+  // if(agent)
+  //   curState->printState();
   return bestMove;
 }
 

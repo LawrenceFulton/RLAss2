@@ -12,7 +12,7 @@ Mouse::Mouse(int x, int y){
   steps = 0;
 }
 
-Mouse::Mouse(int x,int y, int maxRow, int maxCol):Agent(x, y, maxRow,maxCol){
+Mouse::Mouse(int x,int y, int maxRow, int maxCol):Agent(MOUSE_ID, x, y, maxRow,maxCol){
   steps = 0;
 }
 

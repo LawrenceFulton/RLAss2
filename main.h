@@ -11,8 +11,8 @@
 #include <time.h>       /* time */
 
 
-#define ROWS 2
-#define COLUMNS 2
+#define ROWS 4
+#define COLUMNS 4
 
 
 //might not be needed

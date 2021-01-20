@@ -103,7 +103,7 @@ void State::setDirectionValue(char direction, double newVal){
   }     
 }
 
-
+// directionValue also known as Q(t,a)
 double State::getDirectionValue(char direction){
   
   double returnValue;

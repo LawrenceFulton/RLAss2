@@ -1,6 +1,6 @@
 #include "main.h"
 
-int qLearning(){
+void qLearning(){
   World world(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS);
   Cat cat(ROWS-2, COLUMNS-2, ROWS,COLUMNS);
@@ -12,9 +12,9 @@ int qLearning(){
 
 
   double alpha = 0.9;
-  double discount = 0.999;
+  double discount = 0.9;
   double eps = 0.8;
-  int repetitions = 2;
+  int repetitions = 100;
   int testReward;
 
   double arr[repetitions];
@@ -27,17 +27,6 @@ int qLearning(){
 
   char bestMoveMouse;
   char bestMoveCat;
-
-
-  cROld = cat.getC();
-  cCOld = cat.getR();
-  mROld = mouse.getR();
-  mCOld = mouse.getC();
-
-  cRNew = cat.getC();
-  cCNew = cat.getR();
-  mRNew = mouse.getR();
-  mCNew = mouse.getC();
 
 
 
@@ -59,80 +48,67 @@ int qLearning(){
     std::cout << "__________________epoche "<< i << "____________"<< std::endl;
     mouse.setCoordinates(0,0);
     cat.setCoordinates(ROWS-2, COLUMNS-2); // will be just in front of the exit
-    cROld = cat.getC();
-    cCOld = cat.getR();
-    mROld = mouse.getR();
-    mCOld = mouse.getC();
+
     reward = 0;
 
     do // reward will stay 0 until either the mouse got eaten or managed to esceape 
     {
       // the current mouse state 
       mouseOldState =  mouse.getInternalState();
-      catOldState = cat.getInternalState();
-
-
-      // getting the best move (we know that that move is a valid move)
       bestMoveMouse = mouse.getBestMove(eps);
 
+      catOldState = cat.getInternalState();
+      bestMoveCat = cat.getBestMove(eps);   
+
       mouse.move(bestMoveMouse);
-      bestMoveCat = cat.getBestMove(eps);
-
-
-      // moves the mouse in the correct direction       
       cat.move(bestMoveCat);
 
-      // gets the new R and C values
-      cRNew = cat.getC();
-      cCNew = cat.getR();
-      mRNew = mouse.getR();
-      mCNew = mouse.getC();
+
+      catNewState = cat.getInternalState();
+      mouseNewState = mouse.getInternalState();
+
 
       // the new state from which we can get the reward and the max value
-      mouseNewState = mouse.getInternalState();
-      catNewState = cat.getInternalState();
-      
-      
       reward = mouseNewState->getR();
       testReward = catNewState->getR();
-      
-      // both rewards should be the same ! 
-      if (reward != testReward)
-      {
 
-        std::cout << "NONONONONO " << reward << " - "<< testReward << std::endl;
 
-        
-        mouseNewState->printState();
-        catNewState->printState();
-         
-        std::cout << "NONONONONO " << reward << " - "<< testReward << std::endl;
-        return 0;
-      }
-      
-
-      //Bellman equation for mouse 
-      mouseNewVal = mouseOldState->getDirectionValue(bestMoveMouse) + alpha * (reward + discount * mouseNewState->maxValue() - mouseOldState->getDirectionValue(bestMoveMouse));
+      //Bellman equation for mouse   (-testReward)
+      mouseNewVal = mouseOldState->getDirectionValue(bestMoveMouse) + alpha * (-testReward + discount * mouseNewState->maxValue() - mouseOldState->getDirectionValue(bestMoveMouse));
       mouseOldState->setDirectionValue(bestMoveMouse, mouseNewVal);
 
-      catNewVal = catOldState->getDirectionValue(bestMoveCat) + alpha * (-1 * reward + discount * catNewState->maxValue() - catOldState->getDirectionValue(bestMoveCat));
-      catOldState->setDirectionValue(bestMoveCat,catNewVal);
-      // std::cout << mR << " " << mC << std::endl;
-    }while (reward == 0);
 
-    arr[i] = reward;
+      // important is the -1 infront of reward reward for the cat
+      catNewVal = catOldState->getDirectionValue(bestMoveCat) + alpha * (testReward + discount * catNewState->maxValue() - catOldState->getDirectionValue(bestMoveCat));
+      catOldState->setDirectionValue(bestMoveCat,catNewVal);
+
+      // std::cout << " catOldState->getDirectionValue(bestMoveCat) " << catOldState->getDirectionValue(bestMoveCat)
+      //           << " testReward " << testReward 
+      //           << " catNewState->maxValue() " << catNewState->maxValue()
+      //           << std::endl;
+
+
+      // std::cout << "updated state: " << catOldState->id << " with value "<< catNewVal << " for direction" 
+      //           << bestMoveCat << std::endl;
+
+    }while (testReward == 0);
+
+    arr[i] = -testReward;
   }
   
-
+  int sum = 0;
   std::cout << "rewards123:" << std::endl;
   for (size_t i = 0; i < repetitions; i++)
   {
+    sum += arr[i];
     std::cout << arr[i] << ", ";
   }
 
-  std::cout << "\n endeGelende" << std::endl; 
 
-  return 1;
+
+  std::cout << "\nMouse wins " << double(sum) / repetitions << "percentage of the time " << std::endl; 
+
+  return;
 
 }
 
