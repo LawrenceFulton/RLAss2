@@ -2,12 +2,12 @@
 
 
 
-Location::Location(/* args */)
+Location::Location(/* args */) //are the variables necessary?
 {
-  this->toLeft = false;
-  this->toRight = false;
-  this->toTop = false;
-  this->toBottom = false;
+  // this->toLeft = false;
+  // this->toRight = false;
+  // this->toTop = false;
+  // this->toBottom = false;
 }
 
 Location::Location(bool toLeft, bool toRight, bool toTop, bool toBottom)

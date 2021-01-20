@@ -45,13 +45,13 @@ void qLearning(){
 
   for (size_t i = 0; i < repetitions; i++)
   {
-    std::cout << "__________________epoche "<< i << "____________"<< std::endl;
+    //std::cout << "__________________epoche "<< i << "____________"<< std::endl;
     mouse.setCoordinates(0,0);
     cat.setCoordinates(ROWS-2, COLUMNS-2); // will be just in front of the exit
 
     reward = 0;
 
-    do // reward will stay 0 until either the mouse got eaten or managed to esceape 
+    do // reward will stay 0 until either the mouse got eaten or managed to escape 
     {
       // the current mouse state 
       mouseOldState =  mouse.getInternalState();
