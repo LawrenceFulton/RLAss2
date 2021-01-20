@@ -14,7 +14,7 @@ void qLearning(){
   double alpha = 0.9;
   double discount = 0.9;
   double eps = 0.8;
-  int repetitions = 1000;
+  int repetitions = 10;
   int testReward;
 
   double arr[repetitions];
