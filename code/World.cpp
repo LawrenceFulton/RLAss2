@@ -1,7 +1,7 @@
 #include "header/World.h"
 World::World(/* args */)
 {
-  *this = World(3,3);
+  *this = World(3,3); // 3,3
 }
 
 World::World(int rows, int columns){
