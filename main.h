@@ -6,13 +6,12 @@
 #include "code/header/Mouse.h"
 #include "code/header/World.h"
 #include "code/header/State.h"
-#include "code/header/RowCol.h"
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
 
-#define ROWS 4
-#define COLUMNS 4
+#define ROWS 8
+#define COLUMNS 8
 
 
 //might not be needed

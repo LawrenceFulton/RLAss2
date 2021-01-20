@@ -7,11 +7,15 @@
 #include <float.h>
 #include <stdlib.h>     /* srand, rand */
 
+
+// Each agent has an array of states of all possible combinations of the agent himselves
+// and the other agent. The state incoopeates the possible moves and if there is a reward
+// at that state.
+
 class State
 {
 private:
   /* data */
-
 
   int ownR;
   int ownC;
@@ -19,13 +23,11 @@ private:
   int otherR;
   int otherC;
 
-  // RowCol *ownRowCol;
-  // RowCol *otherRowCol;
-
   double toTop;
   double toBottom;
   double toLeft;
   double toRight;
+
   double r;
 
 public:

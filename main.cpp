@@ -14,7 +14,7 @@ void qLearning(){
   double alpha = 0.9;
   double discount = 0.9;
   double eps = 0.8;
-  int repetitions = 100;
+  int repetitions = 1000;
   int testReward;
 
   double arr[repetitions];
@@ -82,15 +82,6 @@ void qLearning(){
       catNewVal = catOldState->getDirectionValue(bestMoveCat) + alpha * (testReward + discount * catNewState->maxValue() - catOldState->getDirectionValue(bestMoveCat));
       catOldState->setDirectionValue(bestMoveCat,catNewVal);
 
-      // std::cout << " catOldState->getDirectionValue(bestMoveCat) " << catOldState->getDirectionValue(bestMoveCat)
-      //           << " testReward " << testReward 
-      //           << " catNewState->maxValue() " << catNewState->maxValue()
-      //           << std::endl;
-
-
-      // std::cout << "updated state: " << catOldState->id << " with value "<< catNewVal << " for direction" 
-      //           << bestMoveCat << std::endl;
-
     }while (testReward == 0);
 
     arr[i] = -testReward;
@@ -100,7 +91,10 @@ void qLearning(){
   std::cout << "rewards123:" << std::endl;
   for (size_t i = 0; i < repetitions; i++)
   {
-    sum += arr[i];
+
+    if(arr[i] == 1) sum +=1;
+    
+
     std::cout << arr[i] << ", ";
   }
 
