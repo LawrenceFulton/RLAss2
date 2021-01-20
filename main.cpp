@@ -100,7 +100,7 @@ void qLearning(){
 
 
 
-  std::cout << "\nMouse wins " << double(sum) / repetitions << "percentage of the time " << std::endl; 
+  std::cout << "\nMouse wins " << double(sum) / repetitions << " percentage of the time " << std::endl; 
 
   return;
 
