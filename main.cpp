@@ -13,7 +13,7 @@ void SARSA(){
 	double alpha = 0.9;
 	double discount = 0.9;
 	double eps = 0.8;
-	int repetitions = 10;
+	int repetitions = 1000;
 	int catReward;
 
 	double arr[repetitions];
@@ -45,7 +45,7 @@ void SARSA(){
 	std::cout << "print internal states cat:" << std::endl;
 	cat.printInteralStates();
 
-    std::cout << "initialisation complete" << std::endl;
+
 
 	for (size_t i = 0; i < repetitions; i++){
 		mouse.setCoordinates(0,0);
@@ -58,23 +58,20 @@ void SARSA(){
 		
         catOldState = cat.getInternalState();
 		oldMoveCat = cat.getBestMove(eps);   
-        std::cout << "first selection complete" << std::endl;
+
 		do // reward will stay 0 until either the mouse got eaten or managed to escape 
 		{
 			//take action and update reward and state'
 			mouse.move(oldMoveMouse);
 			cat.move(oldMoveCat);
-            std::cout << "first move complete" << std::endl;
 
             //new state
 			catNewState = cat.getInternalState(); 
 			mouseNewState = mouse.getInternalState();
-            std::cout << "new state updated" << std::endl;
 			
             // the new state from which we can get the reward 
-			//reward = mouseNewState->getR();
+			reward = mouseNewState->getR();
 			catReward = catNewState->getR();
-            std::cout << "rewards complete" << std::endl;
 
 			// select next action from the new state
 			//mouseNewState =  mouse.getInternalState();
@@ -82,25 +79,23 @@ void SARSA(){
 			//catNewState = cat.getInternalState();
 			bestMoveCat = cat.getBestMove(eps);   
 
-            std::cout << "before mouse eq" << std::endl;
 			//Bellman equation for mouse   (-testReward)
 			mouseNewVal = mouseOldState->getDirectionValue(oldMoveMouse) + alpha * (-catReward + discount * mouseNewState->getDirectionValue(bestMoveMouse) - mouseOldState->getDirectionValue(oldMoveMouse));
-			mouseOldState->setDirectionValue(bestMoveMouse, mouseNewVal);
+			mouseOldState->setDirectionValue(oldMoveMouse, mouseNewVal);
 
-            std::cout << "before cat eq" << std::endl;
+
 			// important is the -1 infront of reward reward for the cat
 			catNewVal = catOldState->getDirectionValue(oldMoveCat) + alpha * (catReward + discount * catNewState->getDirectionValue(bestMoveCat) - catOldState->getDirectionValue(oldMoveCat));
-			catOldState->setDirectionValue(bestMoveCat,catNewVal);
+			catOldState->setDirectionValue(oldMoveCat,catNewVal);
 
 
             oldMoveMouse = mouse.getBestMove(eps);
             oldMoveCat = cat.getBestMove(eps);
 
 			//update the state
-			//mouseOldState =  mouse.getInternalState();
-			//catOldState = cat.getInternalState();
+			mouseOldState =  mouse.getInternalState();
+			catOldState = cat.getInternalState();
 
-            std::cout << "loop finished" << std::endl;
 		}while (catReward == 0);
 
 		arr[i] = -catReward;
