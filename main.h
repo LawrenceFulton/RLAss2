@@ -10,8 +10,8 @@
 #include <time.h>       /* time */
 
 
-#define ROWS 3
-#define COLUMNS 3
+#define ROWS 5
+#define COLUMNS 5
 
 
 //might not be needed

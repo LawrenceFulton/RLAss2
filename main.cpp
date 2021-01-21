@@ -154,7 +154,7 @@ void doubleQLearning(){
 
   for (size_t i = 0; i < repetitions; i++)
   {
-    std::cout << "__________________epoche "<< i << "____________"<< std::endl;
+    std::cout << "__________________epoche "<< i << "_____________________________________________"<< std::endl;
     mouse.setCoordinates(0,0);
     cat.setCoordinates(ROWS-2, COLUMNS-2); // will be just in front of the exit
 
@@ -170,6 +170,8 @@ void doubleQLearning(){
 
       mouse.move(bestMoveMouse);
       cat.move(bestMoveCat);
+
+      mouseOldState->printState();
 
 
       catNewState = cat.getInternalState();
