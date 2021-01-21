@@ -13,8 +13,8 @@ State::~State()
 }
 
 void State::printState(){
-  std::cout << "Own:" << ownR << ", " << ownC
-            << "and Other:"<< otherR << ", " << otherC 
+  std::cout << "Own: " << ownR << ", " << ownC
+            << " and Other: "<< otherR << ", " << otherC 
             <<" and r:" << r << " and ID << " << id <<std::endl;
   std::cout << toLeft0<< " " << toRight0 << " " << toTop0 << " " << toBottom0 << std::endl;
 }
