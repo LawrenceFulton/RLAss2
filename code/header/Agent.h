@@ -6,7 +6,7 @@
 #include "Location.h"
 #include "World.h"
 #include "State.h"
-#include <math.h>       /* pow */
+#include <math.h>       /* pow *//* bow chika wowawow! */ /* groovy funky baby! */
 
 
 class Agent

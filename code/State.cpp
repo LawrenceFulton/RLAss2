@@ -38,7 +38,7 @@ void State::setTransition(int specialCase, Location* loc){
 
 
   // the special cases are happening so that the cat doesn't
-  // camp the goal state
+  // camp the goal state like a fucking noob
   if (specialCase == 1)
   {
     right = false;

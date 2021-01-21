@@ -24,9 +24,9 @@ private:
 
 
 public:
-  World(/* args */);
+  World(/* args */); //can't be deleted?
   World(int rows, int columns);
-  ~World();
+  ~World(); //can't be deleted?
   //////////////////
   void printAllPossDirect();
   Location * getLocation(int row, int column);

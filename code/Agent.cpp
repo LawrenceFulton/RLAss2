@@ -28,10 +28,10 @@ Agent::Agent(int agent, int r, int c, int maxRow, int maxCol ){
           r = 0;
           if (agent) // agent is a cat 
           {
-            // if the mouse is caught, thats a reward of -1 (for the mouse)
+            // if the mouse is caught, thats a reward of 1 (for the cat)
             if (mR == cR && mC == cC)
               r = 1;
-            else if(cR == maxRow-1 && cC == maxCol-1 ) // if the mouse finds the way out the reward is 1
+            else if(cR == maxRow-1 && cC == maxCol-1 ) // if the mouse finds the way out the reward is -1
               r = -1;
           }else// agent is a mouse
           {
@@ -43,7 +43,7 @@ Agent::Agent(int agent, int r, int c, int maxRow, int maxCol ){
           }
           
 
-          states[mR*mc2mr   +mC*mcmr + cR*maxCol + cC].setValues(mR,mC,cR, cC, r);
+          states[mR*mc2mr + mC*mcmr + cR*maxCol + cC].setValues(mR,mC,cR, cC, r);
           // for debug there is an counter / id
           states[mR*mc2mr   +mC*mcmr + cR*maxCol + cC].id = counter;
           counter++;
@@ -67,7 +67,7 @@ void Agent::setCoordinates(int r, int c){
 }
 
 // doesn't check if the direction is possible and thus can lead to segmentation fault
-// if in doubt onc can use move(direction, curPos)
+// if in doubt one can use move(direction, curPos)
 void Agent::move(char direction){
   switch (direction)
   {
@@ -153,7 +153,7 @@ void Agent::learnTransitions(int agent, World* world){
 }
 
 
-// int agent = 0 for mouse and =1 for cat
+// int agent = 0 for mouse and = 1 for cat
 // otherR/otherC are the rows and columns of the other agent 
 int Agent::getStateNumber(int agent, int otherR, int otherC){
   return (r*maxCol*maxCol*maxRow + c *maxCol*maxRow +otherR* maxCol + otherC);
@@ -172,11 +172,10 @@ char Agent::getBestMove(int agent, int otherR, int otherC,int mode, double eps){
   int choice;
   State* curState = getInternalState(agent,otherR, otherC);
 
-  // if the value taken from the unifrom distribution is smaller that
-  // the eps we take the best move, else we find a random possible 
+  // if the value taken from the uniform distribution is smaller than
+  // the epsilon value (eps) we take the best move, else we find a random possible 
   // move
 
-  std::cout << "UNIF: " << unif << ", EPS: " << eps << std::endl; 
 
   if (unif < eps)
   {
@@ -184,10 +183,9 @@ char Agent::getBestMove(int agent, int otherR, int otherC,int mode, double eps){
   }else
   {
 
-    std::cout << "ELSE_ELSE "<< unif <<" " << eps << std::endl;
     do
     {
-      choice = rand() % 4;
+      choice = rand() % 4; // is there an equal distribution between 0 and 100? aka is it fully random?
       switch (choice)
       {
       case 0:
