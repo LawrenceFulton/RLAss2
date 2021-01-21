@@ -97,8 +97,8 @@ void SARSA(){
             oldMoveCat = cat.getBestMove(eps);
 
 			//update the state
-			mouseOldState =  mouse.getInternalState();
-			catOldState = cat.getInternalState();
+			//mouseOldState =  mouse.getInternalState();
+			//catOldState = cat.getInternalState();
 
             std::cout << "loop finished" << std::endl;
 		}while (catReward == 0);
