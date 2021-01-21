@@ -16,8 +16,8 @@ Mouse::Mouse(int x,int y, int maxRow, int maxCol):Agent(MOUSE_ID, x, y, maxRow,m
   steps = 0;
 }
 
-char Mouse::getBestMove( double eps){
-  return Agent::getBestMove(MOUSE_ID,cat->getR(), cat->getC(),eps);
+char Mouse::getBestMove(int mode, double eps){
+  return Agent::getBestMove(MOUSE_ID,cat->getR(), cat->getC(),mode, eps);
 }
 
 State* Mouse::getInternalState(){

@@ -164,7 +164,7 @@ State* Agent::getInternalState(int agent, int otherR, int otherC){
   return(&states[stateNumber]);
 }
 
-char Agent::getBestMove(int agent, int otherR, int otherC, double eps){
+char Agent::getBestMove(int agent, int otherR, int otherC,int mode, double eps){
   char bestMove;
 
   double unif = rand()/ RAND_MAX;
@@ -177,7 +177,7 @@ char Agent::getBestMove(int agent, int otherR, int otherC, double eps){
   // move
   if (unif < eps)
   {
-    bestMove = curState->getBestMove();
+    bestMove = curState->getBestMove(mode);
   }else
   {
     do
@@ -186,19 +186,19 @@ char Agent::getBestMove(int agent, int otherR, int otherC, double eps){
       switch (choice)
       {
       case 0:
-        value = curState->getDirectionValue('l');
+        value = curState->getDirectionValue(0,'l');
         bestMove = 'l';
         break;
       case 1:
-        value = curState->getDirectionValue('r');
+        value = curState->getDirectionValue(0,'r');
         bestMove = 'r';
         break;
       case 2:
-        value = curState->getDirectionValue('t');
+        value = curState->getDirectionValue(0,'t');
         bestMove = 't';
         break;
       case 3:
-        value = curState->getDirectionValue('d');
+        value = curState->getDirectionValue(0,'d');
         bestMove = 'd';
         break;
       }    
