@@ -183,19 +183,22 @@ void doubleQLearning(){
       catReward = catNewState->getR();
 
 
-
+      // binRan can either be 0 or 1 
       binRan = rand()%2;
 
       // double Q update mouse 
       mouseNewVal = mouseOldState->getDirectionValue(binRan,bestMoveMouse) + 
-                    alpha *(mouseReward +   discount* mouseNewState->getDirectionValue(!binRan,mouseNewState->getBestMove(binRan)) -
+                    alpha * (mouseReward + discount * mouseNewState->getDirectionValue(!binRan,mouseNewState->getBestMove(binRan)) -
                     mouseOldState->getDirectionValue(binRan,bestMoveMouse));
 
       mouseOldState->setDirectionValue(binRan,bestMoveMouse, mouseNewVal);
       
+      // binRan can either be 0 or 1 
+      binRan = rand()%2;    
+
       // double Q update cat
       catNewVal = catOldState->getDirectionValue(binRan,bestMoveCat) + 
-                    alpha *(catReward +   discount* catNewState->getDirectionValue(!binRan,catNewState->getBestMove(binRan)) -
+                    alpha * (catReward + discount * catNewState->getDirectionValue(!binRan,catNewState->getBestMove(binRan)) -
                     catOldState->getDirectionValue(binRan,bestMoveCat));
 
       catOldState->setDirectionValue(binRan,bestMoveCat, catNewVal);
@@ -296,8 +299,8 @@ void walkingWithWASD(){
 int main(int argc, char const *argv[])
 {
   srand(time(0));
-  // qLearning();
-  doubleQLearning();
+  qLearning();
+  //doubleQLearning();
   return 0;
 }
 

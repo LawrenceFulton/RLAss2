@@ -49,7 +49,6 @@ World::World(int rows, int columns){
         }else // bottom row w/o corners 
         {
           locations[r][c].setPossDirect(1,1,1,0);
-          std::cout << "yes"<< std::endl;
         }
       }else
       {

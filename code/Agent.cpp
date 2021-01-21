@@ -167,7 +167,7 @@ State* Agent::getInternalState(int agent, int otherR, int otherC){
 char Agent::getBestMove(int agent, int otherR, int otherC,int mode, double eps){
   char bestMove;
 
-  double unif = rand()/ RAND_MAX;
+  double unif = double(rand())/ RAND_MAX;
   double value;
   int choice;
   State* curState = getInternalState(agent,otherR, otherC);
@@ -175,11 +175,16 @@ char Agent::getBestMove(int agent, int otherR, int otherC,int mode, double eps){
   // if the value taken from the unifrom distribution is smaller that
   // the eps we take the best move, else we find a random possible 
   // move
+
+  std::cout << "UNIF: " << unif << ", EPS: " << eps << std::endl; 
+
   if (unif < eps)
   {
     bestMove = curState->getBestMove(mode);
   }else
   {
+
+    std::cout << "ELSE_ELSE "<< unif <<" " << eps << std::endl;
     do
     {
       choice = rand() % 4;
