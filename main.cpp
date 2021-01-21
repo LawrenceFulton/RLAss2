@@ -14,7 +14,7 @@ void SARSA(){
 	double discount = 0.9;
 	double eps = 0.8;
 	int repetitions = 1000;
-	int testReward;
+	int catReward;
 
 	double arr[repetitions];
 
@@ -26,15 +26,19 @@ void SARSA(){
 
 	char bestMoveMouse;
 	char bestMoveCat;
+	char oldMoveMouse;
+	char oldMoveCat;
 
 
-
-	int reward;  //same reward can be used for mouse and cat (have to use it *-1)
+	int reward;  //same reward can be used for mouse and cat (just need to multiply the result by -1)
 	State *mouseNewState; //State_t+1
 	State *mouseOldState; //State_t
+	//State *tempMouseState; //State_t=0
 
 	State *catNewState; //State_t+1
 	State *catOldState; //State_t
+	//State *tempCatState;//State_t=0
+
 	double mouseNewVal;
 	double catNewVal;
 
@@ -49,52 +53,56 @@ void SARSA(){
 		reward = 0;
 		// the current mouse state and intital action selection
 		mouseOldState =  mouse.getInternalState();
-		bestMoveMouse = mouse.getBestMove(eps);
-		catOldState = cat.getInternalState();
-		bestMoveCat = cat.getBestMove(eps);   
-		mouse.move(bestMoveMouse);
-		cat.move(bestMoveCat);
-		catNewState = cat.getInternalState();
-		mouseNewState = mouse.getInternalState();
+		oldMoveMouse = mouse.getBestMove(eps);
+		
+        catOldState = cat.getInternalState();
+		oldMoveCat = cat.getBestMove(eps);   
 
 		do // reward will stay 0 until either the mouse got eaten or managed to escape 
 		{
-			// the current mouse state 
-			mouseOldState =  mouse.getInternalState();
-			bestMoveMouse = mouse.getBestMove(eps);
-
-			catOldState = cat.getInternalState();
-			bestMoveCat = cat.getBestMove(eps);   
-
-			mouse.move(bestMoveMouse);
-			cat.move(bestMoveCat);
-
-
-			catNewState = cat.getInternalState();
+			//take action and update reward and state'
+			mouse.move(oldMoveMouse);
+			cat.move(oldMoveCat);
+            //new state
+			catNewState = cat.getInternalState(); 
 			mouseNewState = mouse.getInternalState();
 
-
-			// the new state from which we can get the reward and the max value
+			// the new state from which we can get the reward 
 			reward = mouseNewState->getR();
-			testReward = catNewState->getR();
+			catReward = catNewState->getR();
+
+
+			// select next action from the new state
+			mouseNewState =  mouse.getInternalState();
+			bestMoveMouse = mouse.getBestMove(eps);
+			catNewState = cat.getInternalState();
+			bestMoveCat = cat.getBestMove(eps);   
 
 
 			//Bellman equation for mouse   (-testReward)
-			mouseNewVal = mouseOldState->getDirectionValue(bestMoveMouse) + alpha * (-testReward + discount * mouseNewState->maxValue() - mouseOldState->getDirectionValue(bestMoveMouse));
+			mouseNewVal = mouseOldState->getDirectionValue(oldMoveMouse) + alpha * (reward + discount * mouseNewState->getDirectionValue(bestMoveMouse) - mouseOldState->getDirectionValue(oldMoveMouse));
 			mouseOldState->setDirectionValue(bestMoveMouse, mouseNewVal);
 
 
 			// important is the -1 infront of reward reward for the cat
-			catNewVal = catOldState->getDirectionValue(bestMoveCat) + alpha * (testReward + discount * catNewState->maxValue() - catOldState->getDirectionValue(bestMoveCat));
+			catNewVal = catOldState->getDirectionValue(oldMoveCat) + alpha * (catReward + discount * catNewState->getDirectionValue(bestMoveCat) - catOldState->getDirectionValue(oldMoveCat));
 			catOldState->setDirectionValue(bestMoveCat,catNewVal);
 
-		}while (testReward == 0);
 
-		arr[i] = -testReward;
+            oldMoveMouse = mouse.getBestMove(eps);
+            oldMoveCat = cat.getBestMove(eps);
+
+			//update the state
+			mouseOldState =  mouse.getInternalState();
+			catOldState = cat.getInternalState();
+
+		}while (catReward == 0);
+
+		arr[i] = -catReward;
 	}
 	
 	int sum = 0;
-	std::cout << "rewards123:" << std::endl;
+	std::cout << "rewards SARSA:" << std::endl;
 	for (size_t i = 0; i < repetitions; i++)
 	{
 
@@ -283,10 +291,10 @@ void walkingWithWASD(){
 
 int main(int argc, char const *argv[])
 {
-  srand(time(0));
-  qLearning();
-
-  return 0;
+    srand(time(0));
+    //qLearning();
+    SARSA();
+    return 0;
 }
 
 
