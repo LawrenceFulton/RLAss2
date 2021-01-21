@@ -139,6 +139,8 @@ void Agent::learnTransitions(int agent, World* world){
       for (size_t d = 0; d < mcmr; d++) // depth
       {
         stateId = r*mc2mr + c*mcmr + d;
+
+        // The following if statements are for the cat not to camp the exit
         if (r == maxRow-1 && c == maxCol-2 && agent == 1) // on the right of the goal state
           states[stateId].setTransition(1,loc); 
         else if (r == maxRow-2 && c == maxCol-1 && agent == 1) // above the goal state
@@ -202,9 +204,6 @@ char Agent::getBestMove(int agent, int otherR, int otherC, double eps){
       }    
     } while (value == -DBL_MAX);
   }
-
-  // if(agent)
-  //   curState->printState();
   return bestMove;
 }
 
