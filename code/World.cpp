@@ -25,7 +25,6 @@ World::World(int rows, int columns){
     for (size_t c = 0; c < columns; c++)
     {
       locations[r][c].id = counter;
-      std::cout << counter << ": " << r << c  << " and rows and colums are " << rows << ", "  << columns <<std::endl;
       counter ++;
 
       if (r == 0) // top row 
