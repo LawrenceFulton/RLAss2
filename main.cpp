@@ -214,40 +214,50 @@ void doubleQLearning(){
   World world(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS);
   Cat cat(ROWS-2, COLUMNS-2, ROWS,COLUMNS);
-  cat.setMouse(&mouse);
-  mouse.setCat(&cat);
+
   Location* curLoc;
   double alpha = 0.1;
   double discount = 0.9;
   double eps = 0.8;
   int repetitions = 1000;
   int mode = 1; // 0 for Q-learning + Sarsa, 1 for double Q-learning 
-  int binRan;
-  double arr[repetitions];
+  int binRan; // needed for the coinflip in double Q-learning
+  double *arr = (double*) calloc (repetitions,sizeof(double));
 
-  char input;
   int mROld, mCOld, mRNew, mCNew; // mouse column and row
   int cROld, cCOld, cRNew, cCNew; // cat column and row
-  mouse.learnTransitions(&world);
-  cat.learnTransitions(&world);
 
+  // keeps track of the best move for the agent
   char bestMoveMouse;
   char bestMoveCat;
 
-  int mouseReward;  //same reward can be used for mouse and cat (have to use it *-1)
+  // keeps track of the reward of the agents (mousseReward = -catReward)
+  int mouseReward;
   int catReward;
 
+  // keeps track of the states of the mouse 
   State *mouseNewState; //State_t+1
   State *mouseOldState; //State_t
 
+  // keeps track of the states of the cat
   State *catNewState; //State_t+1
   State *catOldState; //State_t
+
+  // the new Q value 
   double mouseNewVal;
   double catNewVal;
 
+  // cat and mouse get to know eachother from far away
+  cat.setMouse(&mouse);
+  mouse.setCat(&cat);
+
+  // both agents learn the map
+  mouse.learnTransitions(&world);
+  cat.learnTransitions(&world);
+
   for (size_t i = 0; i < repetitions; i++)
   {
-    std::cout << "__________________epoche "<< i << "_____________________________________________"<< std::endl;
+    // resetting coordinates for each trial (could maybe do random)
     mouse.setCoordinates(0,0);
     cat.setCoordinates(ROWS-2, COLUMNS-2); // will be just in front of the exit
 
@@ -256,10 +266,11 @@ void doubleQLearning(){
 
     do // reward will stay 0 until either the mouse got eaten or managed to esceape 
     {
-      // the current mouse state 
+      // the current agent state Q
       bestMoveMouse = mouse.getBestMove(mode,eps);
       bestMoveCat = cat.getBestMove(mode,eps);   
 
+      
       mouse.move(bestMoveMouse);
       cat.move(bestMoveCat);
 
@@ -300,6 +311,22 @@ void doubleQLearning(){
   }
   printResults(repetitions, arr);
 }
+
+
+void runAlgorithms(){
+  int algotithm = 0;  // 0 = SARSA, 1 = Q-learning, 2 = double Q-learning
+
+
+
+
+
+}
+
+
+
+
+
+
 
 int main(int argc, char const *argv[])
 {
