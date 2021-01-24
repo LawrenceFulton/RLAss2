@@ -177,9 +177,9 @@ char Agent::getBestMove(int agent, int otherR, int otherC,int mode, double eps){
   // move
 
 
-  if (unif < eps)
+  if (unif > eps)
   {
-    bestMove = curState->getBestMove(mode);
+    bestMove = curState->argMaxMove(mode);
   }else
   {
 

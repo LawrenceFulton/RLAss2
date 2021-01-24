@@ -11,6 +11,9 @@
 #define SINGLE 0
 #define DOUBLE 1
 
+#define EPS 0
+#define UCB 1
+
 
 // Each agent has an array of states of all possible combinations of the agent himselves
 // and the other agent. The state incoopeates the possible moves and if there is a reward
@@ -51,7 +54,7 @@ public:
   void printState();
   void setValues(int mouseX, int mouseY, int catX, int catY, double r);
   void setTransition(int specialCase, Location* loc);
-  char getBestMove(int mode);
+  char argMaxMove(int mode);
   double getR();
   double maxValue();
 

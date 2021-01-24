@@ -13,16 +13,24 @@ void printResults(int length, double *arr){
 }
 
 
+void saveOutput( double *reward, int len){
+
+  //Saves the percentage the optimal arm is used
+  std::ofstream outRew( "data/reward.txt" );
+  copy( reward, reward + len, std::ostream_iterator<double>( outRew, "," ) );
+
+}
+
 void runAlgorithms(){
-  int algorithm = 2;  // 0 = SARSA, 1 = Q-learning, 2 = double Q-learning
+  int algorithm = SARSA;  // 0 = SARSA, 1 = Q-learning, 2 = double Q-learning
   World world(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS);
   Cat cat(ROWS-2, COLUMNS-2, ROWS,COLUMNS);
 
   Location* curLoc;
-  double alpha = 0.9;
-  double discount = 0.9;
-  double eps = 0.8;
+  double alpha = 0.5;
+  double discount = 0.5;
+  double eps = 0.1;
   int repetitions = 1000;
   int mode = (algorithm == 2)? 1: 0; 
   int binRan; // needed for the coinflip in double Q-learning
@@ -65,7 +73,7 @@ void runAlgorithms(){
  for (size_t i = 0; i < repetitions; i++)
   {
     // resetting coordinates for each trial (could maybe do random)
-    mouse.setCoordinates(0,0);
+    mouse.setCoordinates(rand() % (ROWS-2) , rand() % (COLUMNS-2));
     cat.setCoordinates(ROWS-2, COLUMNS-2); // will be just in front of the exit
 
     mOldState =  mouse.getInternalState();
@@ -74,8 +82,13 @@ void runAlgorithms(){
     do // reward will stay 0 until either the mouse got eaten or managed to esceape 
     {
       // the current agent state Q
-      mBestMove = mouse.getBestMove(mode,eps);
-      cBestMove = cat.getBestMove(mode,eps);   
+
+      if (algorithm != SARSA)
+      {
+        mBestMove = mouse.getBestMove(mode,eps);
+        cBestMove = cat.getBestMove(mode,eps);   
+      }
+      
 
       
       mouse.move(mBestMove);
@@ -93,8 +106,8 @@ void runAlgorithms(){
       switch (algorithm)
       {
       case 0: //////// SARSA 
-        cBestMoveNewState = cNewState->getBestMove(mode);
-        mBestMoveNewState = mNewState->getBestMove(mode);
+        cBestMoveNewState = cat.getBestMove(mode,eps);
+        mBestMoveNewState = mouse.getBestMove(mode, eps);
 
         //Bellman equation for mouse   (-testReward)
         mNewVal = mOldState->getDirectionValue(mode, mBestMove) 
@@ -112,6 +125,9 @@ void runAlgorithms(){
                   - cOldState->getDirectionValue(mode,cBestMove));
       
         cOldState->setDirectionValue(mode,cBestMove,cNewVal);
+
+        mBestMove = mBestMoveNewState;
+        cBestMove = cBestMoveNewState;
 
         break;
       
@@ -135,7 +151,7 @@ void runAlgorithms(){
       case 2: ////// doubleQ-learning 
         // binRan can either be 0 or 1 for mouse 
         binRan = rand()%2;
-        mBestMoveNewState = mNewState->getBestMove(binRan);
+        mBestMoveNewState = mNewState->argMaxMove(binRan);
         // double Q update mouse 
         mNewVal = mOldState->getDirectionValue(binRan,mBestMove) + 
                       alpha * (mReward + discount * 
@@ -146,7 +162,7 @@ void runAlgorithms(){
         
         // binRan can either be 0 or 1 for cat
         binRan = rand()%2;    
-        cBestMoveNewState = cNewState->getBestMove(binRan);
+        cBestMoveNewState = cNewState->argMaxMove(binRan);
         // double Q update cat
         cNewVal = cOldState->getDirectionValue(binRan,cBestMove) + 
                       alpha * (cReward + discount * 
@@ -165,7 +181,7 @@ void runAlgorithms(){
     arr[i] = mReward;
   }
   printResults(repetitions,arr);
-
+  saveOutput(arr, repetitions);
 }
 
 

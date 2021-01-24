@@ -39,13 +39,9 @@ void State::setTransition(int specialCase, Location* loc){
 
   // the special cases are happening so that the cat doesn't
   // camp the goal state like a fucking noob
-  if (specialCase == 1)
-  {
-    right = false;
-  }else if (specialCase == 2)
-  {
-    bottom = false;
-  }
+
+  right = (specialCase == 1)? false: right;
+  bottom = (specialCase == 2) ? false: bottom;
 
   // Creates, when possible a q value of between 0 and 1 else -DBL_MAX
   toLeft0 = left ? double(rand())/RAND_MAX :  -DBL_MAX;
@@ -64,7 +60,7 @@ void State::setTransition(int specialCase, Location* loc){
 
 
 // returns the best move with the highest Q value, can also return the move regarding both Q values per action 
-char State::getBestMove(int mode){
+char State::argMaxMove(int mode){
   double max = toLeft0;
   char best = 'l'; 
   
