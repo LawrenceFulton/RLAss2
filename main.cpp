@@ -24,7 +24,7 @@ void runAlgorithms(){
   double discount = 0.9;
   double eps = 0.8;
   int repetitions = 1000;
-  int mode = (algorithm == 2)? 1: 0;
+  int mode = (algorithm == 2)? 1: 0; 
   int binRan; // needed for the coinflip in double Q-learning
   double *arr = (double*) calloc (repetitions,sizeof(double));
 
@@ -32,27 +32,27 @@ void runAlgorithms(){
   int cROld, cCOld, cRNew, cCNew; // cat column and row
 
   // keeps track of the best move for the agent
-  char bestMoveMouse;
-  char bestMoveCat;
+  char mBestMove;
+  char cBestMove;
 
-  char bestMoveNewStateMouse;
-  char bestMoveNewStateCat;
+  char mBestMoveNewState;
+  char cBestMoveNewState;
 
-  // keeps track of the reward of the agents (mousseReward = -catReward)
-  int mouseReward;
-  int catReward;
+  // keeps track of the reward of the agents (mousseReward = -cReward)
+  int mReward;
+  int cReward;
 
   // keeps track of the states of the mouse 
-  State *mouseNewState; //State_t+1
-  State *mouseOldState; //State_t
+  State *mNewState; //State_t+1
+  State *mOldState; //State_t
 
   // keeps track of the states of the cat
-  State *catNewState; //State_t+1
-  State *catOldState; //State_t
+  State *cNewState; //State_t+1
+  State *cOldState; //State_t
 
   // the new Q value 
-  double mouseNewVal;
-  double catNewVal;
+  double mNewVal;
+  double cNewVal;
 
   // cat and mouse get to know eachother from far away
   cat.setMouse(&mouse);
@@ -68,101 +68,101 @@ void runAlgorithms(){
     mouse.setCoordinates(0,0);
     cat.setCoordinates(ROWS-2, COLUMNS-2); // will be just in front of the exit
 
-    mouseOldState =  mouse.getInternalState();
-    catOldState = cat.getInternalState();
+    mOldState =  mouse.getInternalState();
+    cOldState = cat.getInternalState();
 
     do // reward will stay 0 until either the mouse got eaten or managed to esceape 
     {
       // the current agent state Q
-      bestMoveMouse = mouse.getBestMove(mode,eps);
-      bestMoveCat = cat.getBestMove(mode,eps);   
+      mBestMove = mouse.getBestMove(mode,eps);
+      cBestMove = cat.getBestMove(mode,eps);   
 
       
-      mouse.move(bestMoveMouse);
-      cat.move(bestMoveCat);
+      mouse.move(mBestMove);
+      cat.move(cBestMove);
 
-      catNewState = cat.getInternalState();
-      mouseNewState = mouse.getInternalState();
+      cNewState = cat.getInternalState();
+      mNewState = mouse.getInternalState();
 
 
       // the new state from which we can get the reward and the max value
-      mouseReward = mouseNewState->getR();
-      catReward = catNewState->getR();
+      mReward = mNewState->getR();
+      cReward = cNewState->getR();
 
 
       switch (algorithm)
       {
       case 0: //////// SARSA 
-        bestMoveNewStateCat = catNewState->getBestMove(mode);
-        bestMoveNewStateMouse = mouseNewState->getBestMove(mode);
+        cBestMoveNewState = cNewState->getBestMove(mode);
+        mBestMoveNewState = mNewState->getBestMove(mode);
 
         //Bellman equation for mouse   (-testReward)
-        mouseNewVal = mouseOldState->getDirectionValue(mode, bestMoveMouse) 
-                    + alpha * (-catReward + discount 
-                    * mouseNewState->getDirectionValue(mode,bestMoveNewStateMouse) 
-                    - mouseOldState->getDirectionValue(mode,bestMoveMouse));
+        mNewVal = mOldState->getDirectionValue(mode, mBestMove) 
+                    + alpha * (-cReward + discount 
+                    * mNewState->getDirectionValue(mode,mBestMoveNewState) 
+                    - mOldState->getDirectionValue(mode,mBestMove));
                     
-        mouseOldState->setDirectionValue(mode,bestMoveMouse, mouseNewVal);
+        mOldState->setDirectionValue(mode,mBestMove, mNewVal);
 
 
         // important is the -1 infront of reward reward for the cat
-        catNewVal = catOldState->getDirectionValue(mode,bestMoveCat) 
-                  + alpha * (catReward + discount 
-                  * catNewState->getDirectionValue(mode,bestMoveNewStateCat) 
-                  - catOldState->getDirectionValue(mode,bestMoveCat));
+        cNewVal = cOldState->getDirectionValue(mode,cBestMove) 
+                  + alpha * (cReward + discount 
+                  * cNewState->getDirectionValue(mode,cBestMoveNewState) 
+                  - cOldState->getDirectionValue(mode,cBestMove));
       
-        catOldState->setDirectionValue(mode,bestMoveCat,catNewVal);
+        cOldState->setDirectionValue(mode,cBestMove,cNewVal);
 
         break;
       
       case 1: /////// Q-Learning
         //Bellman equation for mouse   (-testReward)
-        mouseNewVal = mouseOldState->getDirectionValue(mode,bestMoveMouse) 
-                    + alpha * (mouseReward + discount * mouseNewState->maxValue() 
-                    - mouseOldState->getDirectionValue(mode, bestMoveMouse));
+        mNewVal = mOldState->getDirectionValue(mode,mBestMove) 
+                    + alpha * (mReward + discount * mNewState->maxValue() 
+                    - mOldState->getDirectionValue(mode, mBestMove));
 
-        mouseOldState->setDirectionValue(mode,bestMoveMouse, mouseNewVal);
+        mOldState->setDirectionValue(mode,mBestMove, mNewVal);
 
 
         // important is the -1 infront of reward reward for the cat
-        catNewVal = catOldState->getDirectionValue(mode,bestMoveCat) 
-                  + alpha * (catReward + discount * catNewState->maxValue() 
-                  - catOldState->getDirectionValue(mode,bestMoveCat));
+        cNewVal = cOldState->getDirectionValue(mode,cBestMove) 
+                  + alpha * (cReward + discount * cNewState->maxValue() 
+                  - cOldState->getDirectionValue(mode,cBestMove));
 
-        catOldState->setDirectionValue(mode,bestMoveCat,catNewVal);
+        cOldState->setDirectionValue(mode,cBestMove,cNewVal);
 
         break;
       case 2: ////// doubleQ-learning 
         // binRan can either be 0 or 1 for mouse 
         binRan = rand()%2;
-        bestMoveNewStateMouse = mouseNewState->getBestMove(binRan);
+        mBestMoveNewState = mNewState->getBestMove(binRan);
         // double Q update mouse 
-        mouseNewVal = mouseOldState->getDirectionValue(binRan,bestMoveMouse) + 
-                      alpha * (mouseReward + discount * 
-                      mouseNewState->getDirectionValue(!binRan,bestMoveNewStateMouse) -
-                      mouseOldState->getDirectionValue(binRan,bestMoveMouse));
+        mNewVal = mOldState->getDirectionValue(binRan,mBestMove) + 
+                      alpha * (mReward + discount * 
+                      mNewState->getDirectionValue(!binRan,mBestMoveNewState) -
+                      mOldState->getDirectionValue(binRan,mBestMove));
 
-        mouseOldState->setDirectionValue(binRan,bestMoveMouse, mouseNewVal);
+        mOldState->setDirectionValue(binRan,mBestMove, mNewVal);
         
         // binRan can either be 0 or 1 for cat
         binRan = rand()%2;    
-        bestMoveNewStateCat = catNewState->getBestMove(binRan);
+        cBestMoveNewState = cNewState->getBestMove(binRan);
         // double Q update cat
-        catNewVal = catOldState->getDirectionValue(binRan,bestMoveCat) + 
-                      alpha * (catReward + discount * 
-                      catNewState->getDirectionValue(!binRan,bestMoveNewStateCat) -
-                      catOldState->getDirectionValue(binRan,bestMoveCat));
+        cNewVal = cOldState->getDirectionValue(binRan,cBestMove) + 
+                      alpha * (cReward + discount * 
+                      cNewState->getDirectionValue(!binRan,cBestMoveNewState) -
+                      cOldState->getDirectionValue(binRan,cBestMove));
 
-        catOldState->setDirectionValue(binRan,bestMoveCat, catNewVal);
+        cOldState->setDirectionValue(binRan,cBestMove, cNewVal);
         break;
       }
 
       // S <- S'
-      mouseOldState =  mouse.getInternalState();
-      catOldState = cat.getInternalState();
+      mOldState =  mouse.getInternalState();
+      cOldState = cat.getInternalState();
 
-    }while (catReward == 0);
-    arr[i] = -catReward;
+    }while (mReward == 0);
+    arr[i] = mReward;
   }
   printResults(repetitions,arr);
 
@@ -174,9 +174,6 @@ void runAlgorithms(){
 int main(int argc, char const *argv[])
 {
   srand(time(0));
-  // qLearning();
-  // doubleQLearning();
-  // SARSA();
   runAlgorithms();
   return 0;
 }
