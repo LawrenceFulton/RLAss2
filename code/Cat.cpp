@@ -3,7 +3,7 @@
 
 Cat::Cat(){};
 
-Cat::Cat(int r, int c, int maxRow, int maxCol):Agent::Agent(CAT_ID, r,c,maxRow,maxCol){
+Cat::Cat(int r, int c, int maxRow, int maxCol, World* world):Agent::Agent(CAT_ID, r,c,maxRow,maxCol, world){
   steps = 0;
 } 
 Cat::~Cat(){

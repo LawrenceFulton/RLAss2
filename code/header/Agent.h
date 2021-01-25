@@ -19,6 +19,7 @@ protected:
   int r;
   int c;
   State* states;
+  World* world;
   int maxRow;
   int maxCol;
 
@@ -28,7 +29,7 @@ protected:
 
 public:
   Agent();
-  Agent(int agent, int r, int c, int maxRows, int maxColumns);
+  Agent(int agent, int r, int c, int maxRows, int maxColumns, World* world);
   ~Agent();
   /////////////
   void init();

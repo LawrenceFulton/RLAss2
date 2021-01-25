@@ -20,7 +20,7 @@ private:
 
 public:
   Cat();
-  Cat(int r, int c, int maxRow, int maxCol);
+  Cat(int r, int c, int maxRow, int maxCol, World* world);
   ~Cat();
 
   char getBestMove(int mode, double eps);

@@ -21,7 +21,7 @@ private:
 public:
   Mouse(/* args */);
   Mouse(int x, int y);
-  Mouse(int x, int y, int maxRow, int maxCOl);
+  Mouse(int x, int y, int maxRow, int maxCOl, World* world);
   ~Mouse();
 
 

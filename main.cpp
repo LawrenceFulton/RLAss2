@@ -25,29 +25,26 @@ void runAlgorithms(){
   int mAlg = SARSA;
   int cAlg = QLEARN;  
 
-
   World world(ROWS,COLUMNS);
-  Mouse mouse(0,0,ROWS, COLUMNS);
-  Cat cat(ROWS-2, COLUMNS-2, ROWS,COLUMNS);
+  Mouse mouse(0,0,ROWS, COLUMNS, &world);
+  Cat cat(ROWS-2, COLUMNS-2, ROWS,COLUMNS, &world);
 
-
-
-  double mAlpha = 0.5;
-  double mDiscount = 1;
-  double mEps = 0.1;
+  int mMode = (mAlg == DOUBLEQ)? 1: 0; 
+  int cMode = (cAlg == DOUBLEQ)? 1: 0;
+  
+  int repetitions = 10000;
 
   double cAlpha = 0.5;
   double cDiscount = 1;
   double cEps = 0.1;
 
+  double mAlpha = 0.5;
+  double mDiscount = 1;
+  double mEps = 0.1;
 
-
-  int repetitions = 10000;
-  int mMode = (mAlg == DOUBLEQ)? 1: 0; 
-  int cMode = (cAlg == DOUBLEQ)? 1: 0;
-
-
+  int sum = 0;
   int binRan; // needed for the coinflip in double Q-learning
+
   double *arr = (double*) calloc (repetitions,sizeof(double));
 
   int mROld, mCOld, mRNew, mCNew; // mouse column and row
@@ -80,11 +77,8 @@ void runAlgorithms(){
   cat.setMouse(&mouse);
   mouse.setCat(&cat);
 
-  // both agents learn the map
-  mouse.learnTransitions(&world);
-  cat.learnTransitions(&world);
 
- for (size_t i = 0; i < repetitions; i++)
+  for (size_t i = 0; i < repetitions; i++)
   {
     // resetting coordinates for each trial (could maybe do random)
     mouse.setCoordinates(0, 0);
@@ -96,13 +90,12 @@ void runAlgorithms(){
     mBestMoveNewState = mouse.getBestMove(mMode,mEps);
     cBestMoveNewState = cat.getBestMove(cMode,cEps);   
 
-
     do // reward will stay 0 until either the mouse got eaten or managed to esceape 
     {
+
       // the current agent state Q 
       mBestMove = (mAlg != SARSA)? mouse.getBestMove(mMode, mEps): mBestMoveNewState;
       cBestMove = (cAlg != SARSA)? cat.getBestMove(cMode, cEps): cBestMoveNewState;
-
 
       mouse.move(mBestMove);
       cat.move(cBestMove);
@@ -110,13 +103,11 @@ void runAlgorithms(){
       cNewState = cat.getInternalState();
       mNewState = mouse.getInternalState();
 
-
       // the new state from which we can get the reward and the max value
       mReward = mNewState->getR();
       cReward = cNewState->getR();
 
       ////////////////// Update Mouse ///////////////////////////
-
 
       switch (mAlg)
       {
@@ -157,7 +148,6 @@ void runAlgorithms(){
         break;
       }
 
-      
       //////////////////////// UPDATE CAT /////////////////////// 
 
       switch (cAlg)
@@ -204,15 +194,13 @@ void runAlgorithms(){
       // S <- S'
       mOldState = mouse.getInternalState();
       cOldState = cat.getInternalState();
-
     }while (mReward == 0);
     arr[i] = mReward;
+
   }
-  printResults(repetitions,arr);
-  saveOutput(arr, repetitions);
+  
+
 }
-
-
 
 
 int main(int argc, char const *argv[])

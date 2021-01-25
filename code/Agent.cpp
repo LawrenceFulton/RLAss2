@@ -2,12 +2,13 @@
 
 Agent::Agent(){};
 
-Agent::Agent(int agent, int r, int c, int maxRow, int maxCol ){
+Agent::Agent(int agent, int r, int c, int maxRow, int maxCol, World* world ){
   this->r = r;
   this->c = c;
   this->maxRow = maxRow;
   this->maxCol = maxCol;
   this->agent = agent;
+  this->world = world;
   // world = world1;
   init();
 }
@@ -61,8 +62,7 @@ void Agent::init(){
           counter++;
         }
 
-
-
+  learnTransitions(world);
 }
 
 
