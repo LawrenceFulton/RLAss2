@@ -22,8 +22,8 @@ void saveOutput( double *reward, int len){
 }
 
 void runAlgorithms(){
-  int mAlg = SARSA;
-  int cAlg = SARSA;  
+  int mAlg = DOUBLEQ;
+  int cAlg = QLEARN;  
 
 
   World world(ROWS,COLUMNS);
@@ -32,11 +32,14 @@ void runAlgorithms(){
 
   Location* curLoc;
   double alpha = 0.5;
-  double discount = 0.5;
+  double discount = 0.1;
   double eps = 0.1;
-  int repetitions = 1000;
-  int mMode = (mAlg == 2)? 1: 0; 
-  int cMode = (cAlg == 2)? 1: 0;
+  int repetitions = 10000;
+  int mMode = (mAlg == DOUBLEQ)? 1: 0; 
+  int cMode = (cAlg == DOUBLEQ)? 1: 0;
+
+  std::cout << "MODE:" << cMode << std::endl;
+
   int binRan; // needed for the coinflip in double Q-learning
   double *arr = (double*) calloc (repetitions,sizeof(double));
 
@@ -77,22 +80,21 @@ void runAlgorithms(){
  for (size_t i = 0; i < repetitions; i++)
   {
     // resetting coordinates for each trial (could maybe do random)
-    mouse.setCoordinates(rand() % (ROWS-2) , rand() % (COLUMNS-2));
+    mouse.setCoordinates(0, 0);
     cat.setCoordinates(ROWS-2, COLUMNS-2); // will be just in front of the exit
 
     mOldState =  mouse.getInternalState();
     cOldState = cat.getInternalState();
 
-    mBestMove = mouse.getBestMove(mMode,eps);
-    cBestMove = cat.getBestMove(cMode,eps);   
+    mBestMoveNewState = mouse.getBestMove(mMode,eps);
+    cBestMoveNewState = cat.getBestMove(cMode,eps);   
 
 
     do // reward will stay 0 until either the mouse got eaten or managed to esceape 
     {
       // the current agent state Q
-
       mBestMove = (mAlg != SARSA)? mouse.getBestMove(mMode, eps): mBestMoveNewState;
-      cBestMove = (cAlg != SARSA)? cat.getBestMove(cMode, eps): mBestMoveNewState;
+      cBestMove = (cAlg != SARSA)? cat.getBestMove(cMode, eps): cBestMoveNewState;
 
       
       mouse.move(mBestMove);
@@ -151,9 +153,10 @@ void runAlgorithms(){
       
       //////////////////////// UPDATE CAT /////////////////////// 
 
-      switch (mAlg)
+      switch (cAlg)
       {
       case SARSA: 
+
         cBestMoveNewState = cat.getBestMove(cMode,eps);
 
         // important is the -1 infront of reward reward for the cat
@@ -191,13 +194,8 @@ void runAlgorithms(){
         break;
       }
 
-
-
-
-
-
       // S <- S'
-      mOldState =  mouse.getInternalState();
+      mOldState = mouse.getInternalState();
       cOldState = cat.getInternalState();
 
     }while (mReward == 0);
@@ -205,6 +203,7 @@ void runAlgorithms(){
   }
   printResults(repetitions,arr);
   saveOutput(arr, repetitions);
+  mouse.printInteralStates();
 }
 
 

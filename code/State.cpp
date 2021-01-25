@@ -116,23 +116,46 @@ double State::maxValue(){
 
 
 void State::setDirectionValue(int set, char direction, double newVal){
-  switch (direction)
+
+  if (set == 0){
+    switch (direction)
+    {
+    case 'l': // left
+      toLeft0 = newVal;
+      break;
+    case 'r': // right
+      toRight0 = newVal;
+      break;
+    case 't': // up
+      toTop0 = newVal;
+      break;
+    case 'd': // down
+      toBottom0 = newVal;
+      break;
+    default:
+      std::cout << "There has been an error, the direction cant be " << direction << std::endl;
+    } 
+  }else
   {
-  case 'l': // left
-    toLeft0 = newVal;
-    break;
-  case 'r': // right
-    toRight0 = newVal;
-    break;
-  case 't': // up
-    toTop0 = newVal;
-    break;
-  case 'd': // down
-    toBottom0 = newVal;
-    break;
-  default:
-    std::cout << "There has been an error, the direction cant be " << direction << std::endl;
-  }     
+    switch (direction)
+    {
+    case 'l': // left
+      toLeft1 = newVal;
+      break;
+    case 'r': // right
+      toRight1 = newVal;
+      break;
+    case 't': // up
+      toTop1 = newVal;
+      break;
+    case 'd': // down
+      toBottom1 = newVal;
+      break;
+    default:
+      std::cout << "There has been an error, the direction cant be " << direction << std::endl;
+    }  
+  }
+   
 }
 
 // directionValue also known as Q(t,a)
