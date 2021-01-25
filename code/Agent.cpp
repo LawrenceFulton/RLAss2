@@ -93,6 +93,8 @@ void Agent::move(char direction){
   case 'd': // down
     r++;
     break;
+  case 's': // stay
+    break;
   }
 }
 
@@ -195,7 +197,7 @@ char Agent::getBestMove(int otherR, int otherC,int mode, double eps){
 
     do
     {
-      choice = rand() % 4; // is there an equal distribution between 0 and 100? aka is it fully random?
+      choice = rand() % 5; 
       switch (choice)
       {
       case 0:
@@ -214,6 +216,9 @@ char Agent::getBestMove(int otherR, int otherC,int mode, double eps){
         value = curState->getDirectionValue(0,'d');
         bestMove = 'd';
         break;
+      case 4:
+        value = curState->getDirectionValue(0,'s');
+        bestMove = 's';
       }    
     } while (value == -DBL_MAX);
   }

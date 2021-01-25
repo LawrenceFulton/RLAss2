@@ -23,5 +23,6 @@
 #define SARSA 0
 #define QLEARN 1
 #define DOUBLEQ 2
+#define RANDOM 3
 
 #endif 

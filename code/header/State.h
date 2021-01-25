@@ -34,12 +34,14 @@ private:
   double toBottom0;
   double toLeft0;
   double toRight0;
+  double toStay0;
 
   // Used in double q learning
   double toTop1;
   double toBottom1;
   double toLeft1;
   double toRight1;
+  double toStay1;
 
 
 

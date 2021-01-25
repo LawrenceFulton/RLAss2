@@ -22,8 +22,8 @@ void saveOutput( double *reward, int len){
 }
 
 void runAlgorithms(){
-  int mAlg = SARSA;
-  int cAlg = QLEARN;  
+  int mAlg = DOUBLEQ;
+  int cAlg = RANDOM;  
 
   World world(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS, &world);
@@ -34,13 +34,13 @@ void runAlgorithms(){
   
   int repetitions = 10000;
 
-  double cAlpha = 0.5;
-  double cDiscount = 1;
-  double cEps = 0.1;
+  double cAlpha = 0.11;
+  double cDiscount = 0.2;
+  double cEps = 0.01;
 
-  double mAlpha = 0.5;
-  double mDiscount = 1;
-  double mEps = 0.1;
+  double mAlpha = 0.11;
+  double mDiscount = 0.2;
+  double mEps = 0.01;
 
   int sum = 0;
   int binRan; // needed for the coinflip in double Q-learning
@@ -77,12 +77,21 @@ void runAlgorithms(){
   cat.setMouse(&mouse);
   mouse.setCat(&cat);
 
+  if (mAlg == RANDOM) mEps = 0;
+  if (cAlg == RANDOM) cEps = 0;
+  
+
+
+
 
   for (size_t i = 0; i < repetitions; i++)
   {
     // resetting coordinates for each trial (could maybe do random)
-    mouse.setCoordinates(0, 0);
-    cat.setCoordinates(ROWS-2, COLUMNS-2); // will be just in front of the exit
+    std::cout << i << std::endl;
+
+
+    mouse.setCoordinates(rand() % (ROWS - 2), rand() % (ROWS - 2));
+    cat.setCoordinates(ROWS - 2, COLUMNS - 2); // will be just in front of the exit
 
     mOldState =  mouse.getInternalState();
     cOldState = cat.getInternalState();
@@ -147,6 +156,7 @@ void runAlgorithms(){
         
         break;
       }
+        
 
       //////////////////////// UPDATE CAT /////////////////////// 
 
@@ -199,7 +209,7 @@ void runAlgorithms(){
 
   }
   
-
+  printResults(repetitions, arr);
 }
 
 
