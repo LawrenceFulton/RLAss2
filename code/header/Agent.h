@@ -20,13 +20,18 @@ protected:
   int c;
   State* states;
   int maxRow;
-  int maxCol;  
+  int maxCol;
+
+  
+  int agent; // 0 for mouse, 1 for cat
 
 
 public:
   Agent();
   Agent(int agent, int r, int c, int maxRows, int maxColumns);
   ~Agent();
+  /////////////
+  void init();
   void printCoordinates();
   void setCoordinates(int r, int c);
   void move(char direction);
@@ -34,10 +39,11 @@ public:
   int getR();
   int getC();
   void printInteralStates();
-  int getStateNumber(int agent, int otherR, int otherC);
-  void learnTransitions(int agent, World* world);
-  State* getInternalState(int agent, int otherR, int otherC);
-  char getBestMove(int agent, int otherR, int otherC, int mode, double eps);
+  int getStateNumber(int otherR, int otherC);
+  void learnTransitions( World* world);
+  State* getInternalState(int otherR, int otherC);
+  char getBestMove(int otherR, int otherC, int mode, double eps);
+  void deleteStates();
 };
 
 

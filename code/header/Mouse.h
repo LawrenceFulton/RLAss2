@@ -27,7 +27,6 @@ public:
 
   char getBestMove(int mode, double eps);
   State* getInternalState();
-  void learnTransitions(World* world);
   void setCat(Cat* cat);
 };
 

@@ -7,11 +7,23 @@ Agent::Agent(int agent, int r, int c, int maxRow, int maxCol ){
   this->c = c;
   this->maxRow = maxRow;
   this->maxCol = maxCol;
+  this->agent = agent;
   // world = world1;
+  init();
+}
 
+Agent::~Agent(){
+
+};
+
+//////////////////////////////
+
+void Agent::init(){
   // can only be used if there are only two agents (1 cat and 1 mouse)!
   // not using multidimensional array since it would get really messy imo 
-  states = (State*) calloc(pow(maxRow*maxCol,2.0), sizeof(State));
+
+  int nStates = pow(maxRow*maxCol,2.0);
+  states = new State[nStates];
 
   int mc2mr = maxCol*maxRow*maxCol;
   int mcmr = maxCol*maxRow;
@@ -48,12 +60,10 @@ Agent::Agent(int agent, int r, int c, int maxRow, int maxCol ){
           states[mR*mc2mr   +mC*mcmr + cR*maxCol + cC].id = counter;
           counter++;
         }
+
+
+
 }
-
-Agent::~Agent(){
-};
-
-//////////////////////////////
 
 
 // for debug, can be deleted later 
@@ -118,7 +128,7 @@ void Agent::printInteralStates(){
 
 
 // overtakes the transition from the world created in the main file 
-void Agent::learnTransitions(int agent, World* world){
+void Agent::learnTransitions(World* world){
   Location* loc;
   int specialCase;
   int stateId;
@@ -155,22 +165,22 @@ void Agent::learnTransitions(int agent, World* world){
 
 // int agent = 0 for mouse and = 1 for cat
 // otherR/otherC are the rows and columns of the other agent 
-int Agent::getStateNumber(int agent, int otherR, int otherC){
+int Agent::getStateNumber(int otherR, int otherC){
   return (r*maxCol*maxCol*maxRow + c *maxCol*maxRow +otherR* maxCol + otherC);
 }
 
-State* Agent::getInternalState(int agent, int otherR, int otherC){
-  int stateNumber = getStateNumber(agent,otherR,otherC);
+State* Agent::getInternalState(int otherR, int otherC){
+  int stateNumber = getStateNumber(otherR,otherC);
   return(&states[stateNumber]);
 }
 
-char Agent::getBestMove(int agent, int otherR, int otherC,int mode, double eps){
+char Agent::getBestMove(int otherR, int otherC,int mode, double eps){
   char bestMove;
 
   double unif = double(rand())/ RAND_MAX;
   double value;
   int choice;
-  State* curState = getInternalState(agent,otherR, otherC);
+  State* curState = getInternalState(otherR, otherC);
 
   // if the value taken from the uniform distribution is smaller than
   // the epsilon value (eps) we take the best move, else we find a random possible 
@@ -210,3 +220,7 @@ char Agent::getBestMove(int agent, int otherR, int otherC,int mode, double eps){
   return bestMove;
 }
 
+
+void Agent::deleteStates(){
+  delete [] states;
+}

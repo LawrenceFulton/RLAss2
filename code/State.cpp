@@ -155,7 +155,6 @@ void State::setDirectionValue(int set, char direction, double newVal){
       std::cout << "There has been an error, the direction cant be " << direction << std::endl;
     }  
   }
-   
 }
 
 // directionValue also known as Q(t,a)

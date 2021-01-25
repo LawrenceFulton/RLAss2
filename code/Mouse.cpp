@@ -17,22 +17,21 @@ Mouse::Mouse(int x,int y, int maxRow, int maxCol):Agent(MOUSE_ID, x, y, maxRow,m
 }
 
 char Mouse::getBestMove(int mode, double eps){
-  return Agent::getBestMove(MOUSE_ID,cat->getR(), cat->getC(),mode, eps);
+  return Agent::getBestMove(cat->getR(), cat->getC(),mode, eps);
 }
 
 State* Mouse::getInternalState(){
-  return (Agent::getInternalState(MOUSE_ID,cat->getR(), cat->getC()));
+  return (Agent::getInternalState(cat->getR(), cat->getC()));
 }
 
 
-void Mouse::learnTransitions(World* world){
-  Agent::learnTransitions(MOUSE_ID, world);
-}
 
 void Mouse::setCat(Cat* cat){
   this->cat = cat;
 }
 
 
-Mouse::~Mouse(){}
+Mouse::~Mouse(){
+  deleteStates();
+}
 
