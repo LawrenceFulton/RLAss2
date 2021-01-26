@@ -13,7 +13,7 @@
 
 
 #define ROWS 8
-#define COLUMNS 8 
+#define COLUMNS 8
 
 
 //might not be needed
