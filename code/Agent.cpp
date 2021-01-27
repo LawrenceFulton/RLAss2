@@ -223,7 +223,6 @@ char Agent::getBestMoveUCB(int agent, int otherR, int otherC, double exploreCons
     break;
   }
 
-
   return bestMove;
 }
 
