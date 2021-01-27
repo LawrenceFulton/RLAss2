@@ -13,8 +13,8 @@ State* Cat::getInternalState(){
   return Agent::getInternalState(CAT_ID,mouse->getR(),mouse->getC());
 }
 
-char Cat::getBestMove(double eps){
-  return Agent::getBestMove(CAT_ID,mouse->getR(),mouse->getC(),eps);
+char Cat::getBestMove(int mode, double eps){
+  return Agent::getBestMove(CAT_ID,mouse->getR(),mouse->getC(),mode,eps);
 }
 
 void Cat::learnTransitions(World *world){

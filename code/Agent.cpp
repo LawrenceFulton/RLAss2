@@ -139,6 +139,8 @@ void Agent::learnTransitions(int agent, World* world){
       for (size_t d = 0; d < mcmr; d++) // depth
       {
         stateId = r*mc2mr + c*mcmr + d;
+
+        // The following if statements are for the cat not to camp the exit
         if (r == maxRow-1 && c == maxCol-2 && agent == 1) // on the right of the goal state
           states[stateId].setTransition(1,loc); 
         else if (r == maxRow-2 && c == maxCol-1 && agent == 1) // above the goal state
@@ -162,67 +164,49 @@ State* Agent::getInternalState(int agent, int otherR, int otherC){
   return(&states[stateNumber]);
 }
 
-char Agent::getBestMove(int agent, int otherR, int otherC, double eps){
+char Agent::getBestMove(int agent, int otherR, int otherC,int mode, double eps){
   char bestMove;
 
-  double unif = rand()/ RAND_MAX;
+  double unif = double(rand())/ RAND_MAX;
   double value;
   int choice;
   State* curState = getInternalState(agent,otherR, otherC);
 
-
   // if the value taken from the uniform distribution is smaller than
   // the epsilon value (eps) we take the best move, else we find a random possible 
   // move
-  if (unif < eps)
+
+
+  if (unif > eps)
   {
-    bestMove = curState->getBestMove();
+    bestMove = curState->argMaxMove(mode);
   }else
   {
+
     do
     {
       choice = rand() % 4; // is there an equal distribution between 0 and 100? aka is it fully random?
       switch (choice)
       {
       case 0:
-        value = curState->getDirectionValue('l');
+        value = curState->getDirectionValue(0,'l');
         bestMove = 'l';
         break;
       case 1:
-        value = curState->getDirectionValue('r');
+        value = curState->getDirectionValue(0,'r');
         bestMove = 'r';
         break;
       case 2:
-        value = curState->getDirectionValue('t');
+        value = curState->getDirectionValue(0,'t');
         bestMove = 't';
         break;
       case 3:
-        value = curState->getDirectionValue('d');
+        value = curState->getDirectionValue(0,'d');
         bestMove = 'd';
         break;
       }    
     } while (value == -DBL_MAX);
   }
-
-  // if(agent)
-  //   curState->printState();
-  return bestMove;
-}
-
-char Agent::getBestMoveUCB(int agent, int otherR, int otherC, double exploreConst){
-  char bestMove;
-  Agent* curAgent;
-  int col = curAgent->getC();
-  int row = curAgent->getR();
-  double unif = rand()/ RAND_MAX;
-  double value;
-  int choice;
-  State* curState = getInternalState(agent,otherR, otherC);
-  // get possible directions
-  for (size_t i = 0; i < 4; i++) {
-    break;
-  }
-
   return bestMove;
 }
 

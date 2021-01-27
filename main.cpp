@@ -1,289 +1,209 @@
 #include "main.h"
 
-void SARSA(){
-	// initialise the state
-    World world(ROWS,COLUMNS);
-  	Mouse mouse(0,0,ROWS, COLUMNS);
-  	Cat cat(ROWS-2, COLUMNS-2, ROWS,COLUMNS);
-  	Location* curLoc;
 
-  	cat.setMouse(&mouse);
-  	mouse.setCat(&cat);
-
-	double alpha = 0.9;
-	double discount = 0.9;
-	double eps = 0.8;
-	int repetitions = 1000;
-	int catReward;
-
-	double arr[repetitions];
-
-	char input;
-	int mROld, mCOld, mRNew, mCNew; // mouse column and row
-	int cROld, cCOld, cRNew, cCNew; // cat column and row
-	mouse.learnTransitions(&world);
-	cat.learnTransitions(&world);
-
-	char bestMoveMouse;
-	char bestMoveCat;
-	char oldMoveMouse;
-	char oldMoveCat;
-
-
-	int reward;  //same reward can be used for mouse and cat (just need to multiply the result by -1)
-	State *mouseNewState; //State_t+1
-	State *mouseOldState; //State_t
-	//State *tempMouseState; //State_t=0
-
-	State *catNewState; //State_t+1
-	State *catOldState; //State_t
-	//State *tempCatState;//State_t=0
-
-	double mouseNewVal;
-	double catNewVal;
-
-	std::cout << "print internal states cat:" << std::endl;
-	cat.printInteralStates();
-
-
-
-	for (size_t i = 0; i < repetitions; i++){
-		mouse.setCoordinates(0,0);
-		cat.setCoordinates(ROWS-2, COLUMNS-2); // will be just in front of the exit
-
-		reward = 0;
-		// the current mouse state and intital action selection
-		mouseOldState =  mouse.getInternalState();
-		oldMoveMouse = mouse.getBestMove(eps);
-		
-        catOldState = cat.getInternalState();
-		oldMoveCat = cat.getBestMove(eps);   
-
-		do // reward will stay 0 until either the mouse got eaten or managed to escape 
-		{
-			//take action and update reward and state'
-			mouse.move(oldMoveMouse);
-			cat.move(oldMoveCat);
-
-            //new state
-			catNewState = cat.getInternalState(); 
-			mouseNewState = mouse.getInternalState();
-			
-            // the new state from which we can get the reward 
-			reward = mouseNewState->getR();
-			catReward = catNewState->getR();
-
-			// select next action from the new state
-			//mouseNewState =  mouse.getInternalState();
-			bestMoveMouse = mouse.getBestMove(eps);
-			//catNewState = cat.getInternalState();
-			bestMoveCat = cat.getBestMove(eps);   
-
-			//Bellman equation for mouse   (-testReward)
-			mouseNewVal = mouseOldState->getDirectionValue(oldMoveMouse) + alpha * (-catReward + discount * mouseNewState->getDirectionValue(bestMoveMouse) - mouseOldState->getDirectionValue(oldMoveMouse));
-			mouseOldState->setDirectionValue(oldMoveMouse, mouseNewVal);
-
-
-			// important is the -1 infront of reward reward for the cat
-			catNewVal = catOldState->getDirectionValue(oldMoveCat) + alpha * (catReward + discount * catNewState->getDirectionValue(bestMoveCat) - catOldState->getDirectionValue(oldMoveCat));
-			catOldState->setDirectionValue(oldMoveCat,catNewVal);
-
-
-            oldMoveMouse = mouse.getBestMove(eps);
-            oldMoveCat = cat.getBestMove(eps);
-
-			//update the state
-			mouseOldState =  mouse.getInternalState();
-			catOldState = cat.getInternalState();
-
-		}while (catReward == 0);
-
-		arr[i] = -catReward;
-	}
-	
-	int sum = 0;
-	std::cout << "rewards SARSA:" << std::endl;
-	for (size_t i = 0; i < repetitions; i++)
-	{
-
-		if(arr[i] == 1) sum +=1;
-
-		std::cout << arr[i] << ", ";
-	}
-
-	std::cout << "\nMouse wins " << double(sum) / repetitions << " percentage of the time " << std::endl; 
-
-	return;
+void printResults(int length, double *arr){
+  int sum = 0;
+  std::cout << "rewards123:" << std::endl;
+  for (size_t i = 0; i < length; i++)
+  {
+    if(arr[i] == 1) sum +=1;
+    std::cout << arr[i] << ", ";
+  }
+  std::cout << "\nMouse wins " << double(sum) / length << "percentage of the time " << std::endl; 
 }
 
-void qLearning(){
+
+void saveOutput( double *reward, int len){
+
+  //Saves the percentage the optimal arm is used
+  std::ofstream outRew( "data/reward.txt" );
+  copy( reward, reward + len, std::ostream_iterator<double>( outRew, "," ) );
+
+}
+
+void runAlgorithms(){
+  int mAlg = DOUBLEQ;
+  int cAlg = QLEARN;  
+
+
   World world(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS);
   Cat cat(ROWS-2, COLUMNS-2, ROWS,COLUMNS);
+
   Location* curLoc;
+  double alpha = 0.5;
+  double discount = 0.1;
+  double eps = 0.1;
+  int repetitions = 10000;
+  int mMode = (mAlg == DOUBLEQ)? 1: 0; 
+  int cMode = (cAlg == DOUBLEQ)? 1: 0;
 
+  std::cout << "MODE:" << cMode << std::endl;
 
+  int binRan; // needed for the coinflip in double Q-learning
+  double *arr = (double*) calloc (repetitions,sizeof(double));
+
+  int mROld, mCOld, mRNew, mCNew; // mouse column and row
+  int cROld, cCOld, cRNew, cCNew; // cat column and row
+
+  // keeps track of the best move for the agent
+  char mBestMove;
+  char cBestMove;
+
+  char mBestMoveNewState;
+  char cBestMoveNewState;
+
+  // keeps track of the reward of the agents (mousseReward = -cReward)
+  int mReward;
+  int cReward;
+
+  // keeps track of the states of the mouse 
+  State *mNewState; //State_t+1
+  State *mOldState; //State_t
+
+  // keeps track of the states of the cat
+  State *cNewState; //State_t+1
+  State *cOldState; //State_t
+
+  // the new Q value 
+  double mNewVal;
+  double cNewVal;
+
+  // cat and mouse get to know eachother from far away
   cat.setMouse(&mouse);
   mouse.setCat(&cat);
 
-
-  double alpha = 0.9;
-  double discount = 0.9;
-  double eps = 0.8;
-  int repetitions = 1000;
-  int testReward;
-
-  double arr[repetitions];
-
-  char input;
-  int mROld, mCOld, mRNew, mCNew; // mouse column and row
-  int cROld, cCOld, cRNew, cCNew; // cat column and row
+  // both agents learn the map
   mouse.learnTransitions(&world);
   cat.learnTransitions(&world);
 
-  char bestMoveMouse;
-  char bestMoveCat;
-
-
-
-  int reward;  //same reward can be used for mouse and cat (have to use it *-1)
-  State *mouseNewState; //State_t+1
-  State *mouseOldState; //State_t
-
-  State *catNewState; //State_t+1
-  State *catOldState; //State_t
-  double mouseNewVal;
-  double catNewVal;
-
-  std::cout << "print internal states cat:" << std::endl;
-  cat.printInteralStates();
-
-
-  for (size_t i = 0; i < repetitions; i++)
+ for (size_t i = 0; i < repetitions; i++)
   {
-    //std::cout << "__________________epoche "<< i << "____________"<< std::endl;
-    mouse.setCoordinates(0,0);
+    // resetting coordinates for each trial (could maybe do random)
+    mouse.setCoordinates(0, 0);
     cat.setCoordinates(ROWS-2, COLUMNS-2); // will be just in front of the exit
 
-    reward = 0;
+    mOldState =  mouse.getInternalState();
+    cOldState = cat.getInternalState();
 
-    do // reward will stay 0 until either the mouse got eaten or managed to escape 
+    mBestMoveNewState = mouse.getBestMove(mMode,eps);
+    cBestMoveNewState = cat.getBestMove(cMode,eps);   
+
+
+    do // reward will stay 0 until either the mouse got eaten or managed to esceape 
     {
-      // the current mouse state 
-      mouseOldState =  mouse.getInternalState();
-      bestMoveMouse = mouse.getBestMove(eps);
+      // the current agent state Q
+      mBestMove = (mAlg != SARSA)? mouse.getBestMove(mMode, eps): mBestMoveNewState;
+      cBestMove = (cAlg != SARSA)? cat.getBestMove(cMode, eps): cBestMoveNewState;
 
-      catOldState = cat.getInternalState();
-      bestMoveCat = cat.getBestMove(eps);   
+      
+      mouse.move(mBestMove);
+      cat.move(cBestMove);
 
-      mouse.move(bestMoveMouse);
-      cat.move(bestMoveCat);
-
-
-      catNewState = cat.getInternalState();
-      mouseNewState = mouse.getInternalState();
+      cNewState = cat.getInternalState();
+      mNewState = mouse.getInternalState();
 
 
       // the new state from which we can get the reward and the max value
-      reward = mouseNewState->getR();
-      testReward = catNewState->getR();
+      mReward = mNewState->getR();
+      cReward = cNewState->getR();
+
+      ////////////////// Update Mouse ///////////////////////////
 
 
-      //Bellman equation for mouse   (-testReward)
-      mouseNewVal = mouseOldState->getDirectionValue(bestMoveMouse) + alpha * (-testReward + discount * mouseNewState->maxValue() - mouseOldState->getDirectionValue(bestMoveMouse));
-      mouseOldState->setDirectionValue(bestMoveMouse, mouseNewVal);
+      switch (mAlg)
+      {
+      case SARSA: //////// SARSA 
+        mBestMoveNewState = mouse.getBestMove(mMode, eps);
 
+        //Bellman equation for mouse   (-testReward)
+        mNewVal = mOldState->getDirectionValue(mMode, mBestMove) 
+                    + alpha * (-cReward + discount 
+                    * mNewState->getDirectionValue(mMode,mBestMoveNewState) 
+                    - mOldState->getDirectionValue(mMode,mBestMove));
+                    
+        mOldState->setDirectionValue(mMode,mBestMove, mNewVal);
 
-      // important is the -1 infront of reward reward for the cat
-      catNewVal = catOldState->getDirectionValue(bestMoveCat) + alpha * (testReward + discount * catNewState->maxValue() - catOldState->getDirectionValue(bestMoveCat));
-      catOldState->setDirectionValue(bestMoveCat,catNewVal);
+        break;
+      
+      case QLEARN: /////// Q-Learning
+        //Bellman equation for mouse   (-testReward)
+        mNewVal = mOldState->getDirectionValue(mMode,mBestMove) 
+                    + alpha * (mReward + discount * mNewState->maxValue() 
+                    - mOldState->getDirectionValue(mMode, mBestMove));
 
-    }while (testReward == 0);
+        mOldState->setDirectionValue(mMode,mBestMove, mNewVal);
 
-    arr[i] = -testReward;
+        break;
+      case DOUBLEQ: ////// doubleQ-learning 
+        // binRan can either be 0 or 1 for mouse 
+        binRan = rand()%2;
+        mBestMoveNewState = mNewState->argMaxMove(binRan);
+        // double Q update mouse 
+        mNewVal = mOldState->getDirectionValue(binRan,mBestMove) + 
+                      alpha * (mReward + discount * 
+                      mNewState->getDirectionValue(!binRan,mBestMoveNewState) -
+                      mOldState->getDirectionValue(binRan,mBestMove));
+
+        mOldState->setDirectionValue(binRan,mBestMove, mNewVal);
+        
+        break;
+      }
+
+      
+      //////////////////////// UPDATE CAT /////////////////////// 
+
+      switch (cAlg)
+      {
+      case SARSA: 
+
+        cBestMoveNewState = cat.getBestMove(cMode,eps);
+
+        // important is the -1 infront of reward reward for the cat
+        cNewVal = cOldState->getDirectionValue(cMode,cBestMove) 
+                  + alpha * (cReward + discount 
+                  * cNewState->getDirectionValue(cMode,cBestMoveNewState) 
+                  - cOldState->getDirectionValue(cMode,cBestMove));
+      
+        cOldState->setDirectionValue(cMode,cBestMove,cNewVal);
+
+        break;
+      
+      case QLEARN:
+
+        // important is the -1 infront of reward reward for the cat
+        cNewVal = cOldState->getDirectionValue(cMode,cBestMove) 
+                  + alpha * (cReward + discount * cNewState->maxValue() 
+                  - cOldState->getDirectionValue(cMode,cBestMove));
+
+        cOldState->setDirectionValue(cMode,cBestMove,cNewVal);
+
+        break;
+      case DOUBLEQ:
+
+        // binRan can either be 0 or 1 for cat
+        binRan = rand()%2;    
+        cBestMoveNewState = cNewState->argMaxMove(binRan);
+        // double Q update cat
+        cNewVal = cOldState->getDirectionValue(binRan,cBestMove) + 
+                      alpha * (cReward + discount * 
+                      cNewState->getDirectionValue(!binRan,cBestMoveNewState) -
+                      cOldState->getDirectionValue(binRan,cBestMove));
+
+        cOldState->setDirectionValue(binRan,cBestMove, cNewVal);
+        break;
+      }
+
+      // S <- S'
+      mOldState = mouse.getInternalState();
+      cOldState = cat.getInternalState();
+
+    }while (mReward == 0);
+    arr[i] = mReward;
   }
-  
-  int sum = 0;
-  std::cout << "rewards123:" << std::endl;
-  for (size_t i = 0; i < repetitions; i++)
-  {
-
-    if(arr[i] == 1) sum +=1;
-    
-
-    std::cout << arr[i] << ", ";
-  }
-
-
-
-  std::cout << "\nMouse wins " << double(sum) / repetitions << " percentage of the time " << std::endl; 
-
-  return;
-
-}
-
-void walkingWithWASD(){
-
-  World newWorld(ROWS,COLUMNS);
-  Mouse mouse(0,0,ROWS, COLUMNS);
-  World* pointerW = &newWorld; 
-  Location* curLoc;
-  char input;
-
-  int r,c,x = 0;
-
-  while (x < 1)
-  {
-    x++;
-    r = mouse.getR();
-    c = mouse.getC();
-    std::cout << "r,c: " << r<< c << std::endl; 
-
-    curLoc = newWorld.getLocation(r,c);
-    std::cout << "ID:" << curLoc->id << "Possible moves :" << std::endl;
-    curLoc->printPossDirect();
-
-
-    if(curLoc->isGoal()){
-      std::cout << "congratulations you won the game" << std::endl;
-      return ;
-    }
-
-
-
-    std::cin >> input; 
-    std::cout << "input was " << input << std::endl;
-    switch (input)
-    {
-    case 'w':
-      std::cout << "should have gone up" <<std::endl;
-      mouse.move('t', curLoc);      
-      break;
-
-    case 'a':
-      std::cout << "should have gone left" <<std::endl;
-      mouse.move('l',curLoc);
-      break;
-
-    case 's':
-      std::cout << "should have gone down" <<std::endl;
-      mouse.move('d',curLoc);
-      break;
-    
-    case 'd':
-      std::cout << "should have gone right" <<std::endl;
-      mouse.move('r',curLoc);
-      break;
-    case 'z':
-      std::cout << "Undertandable, have a nice day!" <<std::endl;
-      return;
-      break;
-
-    default:
-      std::cout << "please try again, type z for exit" << std::endl;
-    }
-    mouse.printCoordinates();
-  }
+  printResults(repetitions,arr);
+  saveOutput(arr, repetitions);
+  mouse.printInteralStates();
 }
 
 
@@ -291,11 +211,7 @@ void walkingWithWASD(){
 
 int main(int argc, char const *argv[])
 {
-    srand(time(0));
-    //qLearning();
-    SARSA();
-    return 0;
+  srand(time(0));
+  runAlgorithms();
+  return 0;
 }
-
-
-

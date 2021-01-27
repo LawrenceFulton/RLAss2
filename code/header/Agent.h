@@ -37,8 +37,8 @@ public:
   int getStateNumber(int agent, int otherR, int otherC);
   void learnTransitions(int agent, World* world);
   State* getInternalState(int agent, int otherR, int otherC);
-  char getBestMove(int agent, int otherR, int otherC, double eps);
-  char getBestMoveUCB(int agent, int otherR, int otherC, double exploreConst);
+  char getBestMove(int agent, int otherR, int otherC, int mode, double eps);
+  char getBestMoveUCB(int agent, int otherR, int otherC, int mode, double exploreConst);
 };
 
 

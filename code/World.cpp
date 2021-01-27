@@ -25,7 +25,6 @@ World::World(int rows, int columns){
     for (size_t c = 0; c < columns; c++)
     {
       locations[r][c].id = counter;
-      std::cout << counter << ": " << r << c  << " and rows and colums are " << rows << ", "  << columns <<std::endl;
       counter ++;
 
       if (r == 0) // top row 
@@ -49,7 +48,6 @@ World::World(int rows, int columns){
         }else // bottom row w/o corners 
         {
           locations[r][c].setPossDirect(1,1,1,0);
-          std::cout << "bottom row no corners"<< std::endl;
         }
       }else
       {
