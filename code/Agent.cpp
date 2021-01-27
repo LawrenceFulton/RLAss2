@@ -170,6 +170,7 @@ char Agent::getBestMove(int agent, int otherR, int otherC, double eps){
   int choice;
   State* curState = getInternalState(agent,otherR, otherC);
 
+
   // if the value taken from the uniform distribution is smaller than
   // the epsilon value (eps) we take the best move, else we find a random possible 
   // move
@@ -205,6 +206,24 @@ char Agent::getBestMove(int agent, int otherR, int otherC, double eps){
 
   // if(agent)
   //   curState->printState();
+  return bestMove;
+}
+
+char Agent::getBestMoveUCB(int agent, int otherR, int otherC, double exploreConst){
+  char bestMove;
+  Agent* curAgent;
+  int col = curAgent->getC();
+  int row = curAgent->getR();
+  double unif = rand()/ RAND_MAX;
+  double value;
+  int choice;
+  State* curState = getInternalState(agent,otherR, otherC);
+  // get possible directions
+  for (size_t i = 0; i < 4; i++) {
+    break;
+  }
+
+
   return bestMove;
 }
 
