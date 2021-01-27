@@ -3,13 +3,13 @@
 
 void printResults(int length, double *arr){
   int sum = 0;
-  std::cout << "rewards123:" << std::endl;
+  // std::cout << "rewards123:" << std::endl;
   for (size_t i = 0; i < length; i++)
   {
     if(arr[i] == 1) sum +=1;
     std::cout << arr[i] << ", ";
   }
-  std::cout << "\nMouse wins " << double(sum) / length << "percentage of the time " << std::endl; 
+  // std::cout << "\nMouse wins " << double(sum) / length << "percentage of the time " << std::endl; 
 }
 
 
@@ -22,8 +22,8 @@ void saveOutput( double *reward, int len){
 }
 
 void runAlgorithms(){
-  int mAlg = DOUBLEQ;
-  int cAlg = RANDOM;  
+  int mAlg = QLEARN;
+  int cAlg = QLEARN;  
 
   World world(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS, &world);
@@ -34,13 +34,14 @@ void runAlgorithms(){
   
   int repetitions = 10000;
 
-  double cAlpha = 0.11;
-  double cDiscount = 0.2;
-  double cEps = 0.01;
-
-  double mAlpha = 0.11;
-  double mDiscount = 0.2;
+  double mAlpha = 0.42;
+  double mDiscount = 0.59;
   double mEps = 0.01;
+
+  double cAlpha = 0.42;
+  double cDiscount = 0.59;
+  double cEps = 0.01;
+  double cC = 0.2;
 
   int sum = 0;
   int binRan; // needed for the coinflip in double Q-learning
@@ -87,7 +88,7 @@ void runAlgorithms(){
   for (size_t i = 0; i < repetitions; i++)
   {
     // resetting coordinates for each trial (could maybe do random)
-    std::cout << i << std::endl;
+    // std::cout << i << std::endl;
 
 
     mouse.setCoordinates(rand() % (ROWS - 2), rand() % (ROWS - 2));
@@ -96,15 +97,20 @@ void runAlgorithms(){
     mOldState =  mouse.getInternalState();
     cOldState = cat.getInternalState();
 
-    mBestMoveNewState = mouse.getBestMove(mMode,mEps);
+    // mBestMoveNewState = mouse.getBestMove(mMode,mEps);
+    mBestMoveNewState = mouse.ucb(cC);
     cBestMoveNewState = cat.getBestMove(cMode,cEps);   
+    
+
 
     do // reward will stay 0 until either the mouse got eaten or managed to esceape 
     {
 
       // the current agent state Q 
-      mBestMove = (mAlg != SARSA)? mouse.getBestMove(mMode, mEps): mBestMoveNewState;
+      // mBestMove = (mAlg != SARSA)? mouse.getBestMove(mMode, mEps): mBestMoveNewState;
+      mBestMove = mouse.ucb(cC);
       cBestMove = (cAlg != SARSA)? cat.getBestMove(cMode, cEps): cBestMoveNewState;
+
 
       mouse.move(mBestMove);
       cat.move(cBestMove);
@@ -210,6 +216,7 @@ void runAlgorithms(){
   }
   
   printResults(repetitions, arr);
+  saveOutput(arr, repetitions);
 }
 
 void gridSearch(){
@@ -429,7 +436,7 @@ void gridSearch(){
 int main(int argc, char const *argv[])
 {
   srand(time(0));
-  // runAlgorithms();
-  gridSearch();
+  runAlgorithms();
+  // gridSearch();
   return 0;
 }

@@ -43,9 +43,18 @@ private:
   double toRight1;
   double toStay1;
 
+  //keeps track of how often each action was performed 
+  int nTop;
+  int nBottom;
+  int nLeft;
+  int nRight;
+  int nStay;
 
+  // keeps track of the number of times this state happend
+  int nState;
 
-
+  
+  char actions[5] = {'l','r','t','d','s'};
 
   double r;
 
@@ -53,6 +62,9 @@ public:
   int id;
   State(/* args */);
   State(int mouseX, int mouseY, int catX, int catY);
+  ~State();
+
+  //////
   void printState();
   void setValues(int mouseX, int mouseY, int catX, int catY, double r);
   void setTransition(int specialCase, Location* loc);
@@ -62,7 +74,13 @@ public:
 
   void setDirectionValue(int set, char direction, double newVal);
   double getDirectionValue(int set, char direction);
-  ~State();
+
+  int getNAction(char direction);
+  int getNState();
+
+  void incrementAction(char direction);
+  void incrementState();
+  
 };
 
 

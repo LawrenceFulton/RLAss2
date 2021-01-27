@@ -6,7 +6,7 @@
 #include "Location.h"
 #include "World.h"
 #include "State.h"
-#include <math.h>       /* pow *//* bow chika wowawow! */ /* groovy funky baby! */
+#include <cmath>       /* pow *//* bow chika wowawow! */ /* groovy funky baby! */
 
 
 class Agent
@@ -22,6 +22,8 @@ protected:
   World* world;
   int maxRow;
   int maxCol;
+
+  char choices[5] = {'l','r','t','d','s'};
 
   
   int agent; // 0 for mouse, 1 for cat
@@ -44,6 +46,7 @@ public:
   void learnTransitions( World* world);
   State* getInternalState(int otherR, int otherC);
   char getBestMove(int otherR, int otherC, int mode, double eps);
+  char ucb(int otherR, int otherC, double var);
   void deleteStates();
 };
 

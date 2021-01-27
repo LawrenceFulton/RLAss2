@@ -24,6 +24,7 @@ public:
   ~Cat();
 
   char getBestMove(int mode, double eps);
+  char ucb(double c);
   State* getInternalState();
   void setMouse(Mouse* mouse);
 };

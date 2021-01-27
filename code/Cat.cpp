@@ -19,6 +19,10 @@ char Cat::getBestMove(int mode, double eps){
   return Agent::getBestMove(mouse->getR(),mouse->getC(),mode,eps);
 }
 
+char Cat::ucb(double c){
+  return Agent::ucb(mouse->getR(),mouse->getC(), c);
+}
+
 void Cat::setMouse(Mouse* mouse){
   this->mouse = mouse;
 }

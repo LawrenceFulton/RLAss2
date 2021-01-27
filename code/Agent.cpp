@@ -198,31 +198,36 @@ char Agent::getBestMove(int otherR, int otherC,int mode, double eps){
     do
     {
       choice = rand() % 5; 
-      switch (choice)
-      {
-      case 0:
-        value = curState->getDirectionValue(0,'l');
-        bestMove = 'l';
-        break;
-      case 1:
-        value = curState->getDirectionValue(0,'r');
-        bestMove = 'r';
-        break;
-      case 2:
-        value = curState->getDirectionValue(0,'t');
-        bestMove = 't';
-        break;
-      case 3:
-        value = curState->getDirectionValue(0,'d');
-        bestMove = 'd';
-        break;
-      case 4:
-        value = curState->getDirectionValue(0,'s');
-        bestMove = 's';
-      }    
+      bestMove = choices[choice];
+      value = curState->getDirectionValue(0,bestMove);
+          
     } while (value == -DBL_MAX);
   }
   return bestMove;
+}
+
+char Agent::ucb(int otherR, int otherC, double var){
+  State* curState = getInternalState(otherR, otherC);
+  char bestChoice, curMove;
+  double maxValue = -DBL_MAX;
+  double curValue;
+
+
+
+
+  for (size_t i = 0; i < 5; i++)
+  {
+    curMove = choices[i];
+    curValue = curState->getDirectionValue(0,curMove) + var *  std::sqrt( double(curState->getNState()) / curState->getNAction(curMove)) ;
+
+    if (curValue > maxValue)
+    {
+      maxValue = curValue;
+      bestChoice = curMove;
+    }
+  }
+  
+  return bestChoice;
 }
 
 

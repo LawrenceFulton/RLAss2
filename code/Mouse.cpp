@@ -20,6 +20,11 @@ char Mouse::getBestMove(int mode, double eps){
   return Agent::getBestMove(cat->getR(), cat->getC(),mode, eps);
 }
 
+char Mouse::ucb(double c){
+  return Agent::ucb(cat->getR(),cat->getC(), c);
+}
+
+
 State* Mouse::getInternalState(){
   return (Agent::getInternalState(cat->getR(), cat->getC()));
 }
