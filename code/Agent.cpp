@@ -210,3 +210,7 @@ char Agent::getBestMove(int agent, int otherR, int otherC,int mode, double eps){
   return bestMove;
 }
 
+char Agent::getBestMoveUCB(int agent, int otherR, int otherC, int mode, double exploreConst){
+  char bestMove;
+  State* curState = getInternalState(agent,otherR, otherC);
+}

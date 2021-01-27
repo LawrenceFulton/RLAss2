@@ -19,13 +19,20 @@ void State::printState(){
   std::cout << toLeft0<< " " << toRight0 << " " << toTop0 << " " << toBottom0 << std::endl;
 }
 
-void State::setValues(int ownR, int ownC, int otherR, int otherC, double r){
+void State::setValues(int ownR, int ownC, int otherR, int otherC, double r, int* directionVisitedCount ){
   this->ownR = ownR;
   this->ownC = ownC;
   this->otherR = otherR;
   this->otherC = otherC;
-
   this->r = r;
+  //set the initial array for directions in each state
+  for(int i = 0; i < 4; i++){
+    this->directionVisitedCount[i] = 0;
+  }
+}
+
+void State::updateDirectionVisited(Location* loc, char direction){
+  //for the direction increment counter by 1
 }
 
 void State::setTransition(int specialCase, Location* loc){

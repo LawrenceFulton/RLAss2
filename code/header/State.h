@@ -49,17 +49,18 @@ private:
 
 public:
   int id;
+  int directionVisitedCount[4]; 
   State(/* args */);
   State(int mouseX, int mouseY, int catX, int catY);
   void printState();
-  void setValues(int mouseX, int mouseY, int catX, int catY, double r);
+  void setValues(int mouseX, int mouseY, int catX, int catY, double r, int* directionVisitedCount);
   void setTransition(int specialCase, Location* loc);
   char argMaxMove(int mode);
   double getR();
   double maxValue();
-
   void setDirectionValue(int set, char direction, double newVal);
   double getDirectionValue(int set, char direction);
+  void updateDirectionVisited(Location* loc, char direction);
   ~State();
 };
 
