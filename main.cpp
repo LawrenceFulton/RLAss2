@@ -213,8 +213,8 @@ void runAlgorithms(){
 }
 
 void gridSearch(){
-  int mAlg = RANDOM;
-  int cAlg = SARSA;  
+  int mAlg = DOUBLEQ;
+  int cAlg = RANDOM;  
 
   World world(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS, &world);
@@ -273,17 +273,17 @@ void gridSearch(){
   if (mAlg == RANDOM) mEps = 0;
   if (cAlg == RANDOM) cEps = 0;
   
-  for (size_t a = 1; a < 30; a++)
+  for (size_t a = 30; a < 55; a++)
   {
-    cAlpha = double(a) / 100;
+    mAlpha = double(a) / 100;
 
-    for (size_t d = 1; d < 52; d++)
+    for (size_t d = 40; d < 60; d++)
     {
-      cDiscount = double(d) / 100;
+      mDiscount = double(d) / 100;
 
-      for (size_t e = 1; e < 10; e++)
+      for (size_t e = 1; e < 15; e++)
       {
-        cEps = double(e)/1000;
+        mEps = double(e)/1000;
         
         // should be done for memory allocation issues 
         cat.deleteStates();
@@ -414,9 +414,9 @@ void gridSearch(){
           arr[i] = mReward;
 
 
-          if (cReward == 1) sum ++;
+          if (mReward == 1) sum ++;
         }
-        std::cout << cAlpha << ", " << cDiscount << ", " << cEps << ", " << double(sum) / repetitions << std::endl;
+        std::cout << mAlpha << ", " << mDiscount << ", " << mEps << ", " << double(sum) / repetitions << std::endl;
         sum = 0;
       }
     }
