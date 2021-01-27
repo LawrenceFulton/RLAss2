@@ -45,7 +45,7 @@ public:
   int getStateNumber(int otherR, int otherC);
   void learnTransitions( World* world);
   State* getInternalState(int otherR, int otherC);
-  char getBestMove(int otherR, int otherC, int mode, double eps);
+  char epsGreedy(int otherR, int otherC, int mode, double eps);
   char ucb(int otherR, int otherC, double var);
   void deleteStates();
 };

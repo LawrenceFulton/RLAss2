@@ -176,7 +176,7 @@ State* Agent::getInternalState(int otherR, int otherC){
   return(&states[stateNumber]);
 }
 
-char Agent::getBestMove(int otherR, int otherC,int mode, double eps){
+char Agent::epsGreedy(int otherR, int otherC,int mode, double eps){
   char bestMove;
 
   double unif = double(rand())/ RAND_MAX;
@@ -215,7 +215,7 @@ char Agent::ucb(int otherR, int otherC, double var){
 
 
 
-  for (size_t i = 0; i < 5; i++)
+  for (size_t i = 0; i < 4; i++)
   {
     curMove = choices[i];
     curValue = curState->getDirectionValue(0,curMove) + var *  std::sqrt( double(curState->getNState()) / curState->getNAction(curMove)) ;
@@ -226,6 +226,10 @@ char Agent::ucb(int otherR, int otherC, double var){
       bestChoice = curMove;
     }
   }
+  curState->incrementAction(bestChoice);
+  curState->incrementState();
+  std::cout << bestChoice << std::endl;
+
   
   return bestChoice;
 }

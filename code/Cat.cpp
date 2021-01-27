@@ -15,8 +15,8 @@ State* Cat::getInternalState(){
   return Agent::getInternalState(mouse->getR(),mouse->getC());
 }
 
-char Cat::getBestMove(int mode, double eps){
-  return Agent::getBestMove(mouse->getR(),mouse->getC(),mode,eps);
+char Cat::epsGreedy(int mode, double eps){
+  return Agent::epsGreedy(mouse->getR(),mouse->getC(),mode,eps);
 }
 
 char Cat::ucb(double c){

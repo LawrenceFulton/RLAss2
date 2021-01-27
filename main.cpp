@@ -9,7 +9,7 @@ void printResults(int length, double *arr){
     if(arr[i] == 1) sum +=1;
     std::cout << arr[i] << ", ";
   }
-  // std::cout << "\nMouse wins " << double(sum) / length << "percentage of the time " << std::endl; 
+  std::cout << "\nMouse wins " << double(sum) / length << "percentage of the time " << std::endl; 
 }
 
 
@@ -41,7 +41,7 @@ void runAlgorithms(){
   double cAlpha = 0.42;
   double cDiscount = 0.59;
   double cEps = 0.01;
-  double cC = 0.2;
+  double cC = 0.3;
 
   int sum = 0;
   int binRan; // needed for the coinflip in double Q-learning
@@ -97,9 +97,10 @@ void runAlgorithms(){
     mOldState =  mouse.getInternalState();
     cOldState = cat.getInternalState();
 
-    // mBestMoveNewState = mouse.getBestMove(mMode,mEps);
+    // mBestMoveNewState = mouse.epsGreedy(mMode,mEps);
     mBestMoveNewState = mouse.ucb(cC);
-    cBestMoveNewState = cat.getBestMove(cMode,cEps);   
+    cBestMoveNewState = cat.epsGreedy(cMode,cEps);   
+    // cBestMoveNewState = cat.ucb(cC);
     
 
 
@@ -107,9 +108,10 @@ void runAlgorithms(){
     {
 
       // the current agent state Q 
-      // mBestMove = (mAlg != SARSA)? mouse.getBestMove(mMode, mEps): mBestMoveNewState;
+      // mBestMove = (mAlg != SARSA)? mouse.epsGreedy(mMode, mEps): mBestMoveNewState;
       mBestMove = mouse.ucb(cC);
-      cBestMove = (cAlg != SARSA)? cat.getBestMove(cMode, cEps): cBestMoveNewState;
+      cBestMove = (cAlg != SARSA)? cat.epsGreedy(cMode, cEps): cBestMoveNewState;
+      // cBestMove = cat.ucb(cC);
 
 
       mouse.move(mBestMove);
@@ -127,7 +129,7 @@ void runAlgorithms(){
       switch (mAlg)
       {
       case SARSA: //////// SARSA 
-        mBestMoveNewState = mouse.getBestMove(mMode, mEps);
+        mBestMoveNewState = mouse.epsGreedy(mMode, mEps);
 
         //Bellman equation for mouse   (-testReward)
         mNewVal = mOldState->getDirectionValue(mMode, mBestMove) 
@@ -170,7 +172,7 @@ void runAlgorithms(){
       {
       case SARSA: 
 
-        cBestMoveNewState = cat.getBestMove(cMode,cEps);
+        cBestMoveNewState = cat.epsGreedy(cMode,cEps);
 
         // important is the -1 infront of reward reward for the cat
         cNewVal = cOldState->getDirectionValue(cMode,cBestMove) 
@@ -220,7 +222,7 @@ void runAlgorithms(){
 }
 
 void gridSearch(){
-  int mAlg = DOUBLEQ;
+  int mAlg = QLEARN;
   int cAlg = RANDOM;  
 
   World world(ROWS,COLUMNS);
@@ -235,6 +237,7 @@ void gridSearch(){
   double mAlpha = 0.11;
   double mDiscount = 0.2;
   double mEps = 0.01;
+  double mC = 0;
 
   double cAlpha = 0.11;
   double cDiscount = 0.2;
@@ -280,17 +283,17 @@ void gridSearch(){
   if (mAlg == RANDOM) mEps = 0;
   if (cAlg == RANDOM) cEps = 0;
   
-  for (size_t a = 30; a < 55; a++)
+  for (size_t a = 10; a < 85; a+=10)
   {
     mAlpha = double(a) / 100;
 
-    for (size_t d = 40; d < 60; d++)
+    for (size_t d = 5; d < 86; d+=10)
     {
       mDiscount = double(d) / 100;
 
-      for (size_t e = 1; e < 15; e++)
+      for (size_t e = 1; e < 61; e+=10)
       {
-        mEps = double(e)/1000;
+        mC = double(e)/1000;
         
         // should be done for memory allocation issues 
         cat.deleteStates();
@@ -309,15 +312,17 @@ void gridSearch(){
           mOldState =  mouse.getInternalState();
           cOldState = cat.getInternalState();
 
-          mBestMoveNewState = mouse.getBestMove(mMode,mEps);
-          cBestMoveNewState = cat.getBestMove(cMode,cEps);   
+          // mBestMoveNewState = mouse.epsGreedy(mMode,mEps);
+          mBestMoveNewState = mouse.ucb(mC);
+          cBestMoveNewState = cat.epsGreedy(cMode,cEps);   
 
           do // reward will stay 0 until either the mouse got eaten or managed to esceape 
           {
 
             // the current agent state Q 
-            mBestMove = (mAlg != SARSA)? mouse.getBestMove(mMode, mEps): mBestMoveNewState;
-            cBestMove = (cAlg != SARSA)? cat.getBestMove(cMode, cEps): cBestMoveNewState;
+            // mBestMove = (mAlg != SARSA)? mouse.epsGreedy(mMode, mEps): mBestMoveNewState;
+            mBestMove = mouse.ucb(mC);
+            cBestMove = (cAlg != SARSA)? cat.epsGreedy(cMode, cEps): cBestMoveNewState;
 
             mouse.move(mBestMove);
             cat.move(cBestMove);
@@ -334,7 +339,7 @@ void gridSearch(){
             switch (mAlg)
             {
             case SARSA: //////// SARSA 
-              mBestMoveNewState = mouse.getBestMove(mMode, mEps);
+              mBestMoveNewState = mouse.epsGreedy(mMode, mEps);
 
               //Bellman equation for mouse   (-testReward)
               mNewVal = mOldState->getDirectionValue(mMode, mBestMove) 
@@ -377,7 +382,7 @@ void gridSearch(){
             {
             case SARSA: 
 
-              cBestMoveNewState = cat.getBestMove(cMode,cEps);
+              cBestMoveNewState = cat.epsGreedy(cMode,cEps);
 
               // important is the -1 infront of reward reward for the cat
               cNewVal = cOldState->getDirectionValue(cMode,cBestMove) 
@@ -423,12 +428,12 @@ void gridSearch(){
 
           if (mReward == 1) sum ++;
         }
-        std::cout << mAlpha << ", " << mDiscount << ", " << mEps << ", " << double(sum) / repetitions << std::endl;
+        std::cout << mAlpha << ", " << mDiscount << ", " << mC << ", " << double(sum) / repetitions << std::endl;
         sum = 0;
       }
     }
   }
-  printResults(repetitions, arr);
+  // printResults(repetitions, arr);
 }
 
 

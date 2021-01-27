@@ -3,9 +3,6 @@ State::State(/* args */)
 {
 }
 
-// State::State(int mouseR, int mouseC, int catR, int catC){
-//   setValues(mouseR, mouseC, catR, catC, 0);
-// }
 
 
 State::~State()
