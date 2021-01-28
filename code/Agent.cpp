@@ -15,7 +15,7 @@ Agent::Agent(int agent, int r, int c, int maxRow, int maxCol ){
 
   int mc2mr = maxCol*maxRow*maxCol;
   int mcmr = maxCol*maxRow;
-
+  //State* curState = getInternalState(agent,otherR, otherC);
 
   int counter = 0;
 
@@ -212,5 +212,33 @@ char Agent::getBestMove(int agent, int otherR, int otherC,int mode, double eps){
 
 char Agent::getBestMoveUCB(int agent, int otherR, int otherC, int mode, double exploreConst){
   char bestMove;
+  double value;
   State* curState = getInternalState(agent,otherR, otherC);
+  double* upperBound = (double*) calloc(4,sizeof(double));
+  double* directionReward = (double*) malloc(4*sizeof(double));
+  for(size_t i = 0; i < 4; i++){
+    char direction;
+    switch(i){
+      case(0):  
+        direction = 'l';
+        break;
+      case(1):
+        direction = 'r';
+        break;
+      case(2):
+        direction = 't';
+        break;
+      case(3):
+        direction = 'd';
+        break;
+    }
+    if(curState->directionVisitedCount[i] < 1){
+      curState->updateDirectionVisited(curState,direction);
+      value = directionReward[i] + exploreConst * sqrt(log(i) / curState->directionVisitedCount[i]);
+    }
+  }
+  bestMove = curState->argMaxMove(mode);
+  curState->updateDirectionVisited(curState,bestMove);
+  curState->getDirectionValue(0,bestMove);
+
 }
