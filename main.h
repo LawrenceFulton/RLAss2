@@ -12,8 +12,8 @@
 #include <fstream>
 
 
-#define ROWS 8
-#define COLUMNS 8
+#define ROWS 5
+#define COLUMNS 5
 
 
 //might not be needed

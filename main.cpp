@@ -23,7 +23,7 @@ void saveOutput( double *reward, int len){
 
 void runAlgorithms(){
   int mAlg = DOUBLEQ;
-  int cAlg = RANDOM;  
+  int cAlg = QLEARN;  
 
   World world(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS, &world);
@@ -34,12 +34,12 @@ void runAlgorithms(){
   
   int repetitions = 10000;
 
-  double cAlpha = 0.11;
-  double cDiscount = 0.2;
+  double cAlpha = 0.29;
+  double cDiscount = 0.42;
   double cEps = 0.01;
 
-  double mAlpha = 0.11;
-  double mDiscount = 0.2;
+  double mAlpha = 0.43;
+  double mDiscount = 0.52;
   double mEps = 0.01;
 
   int sum = 0;
@@ -210,6 +210,7 @@ void runAlgorithms(){
   }
   
   printResults(repetitions, arr);
+  saveOutput(arr, repetitions);
 }
 
 void gridSearch(){
@@ -429,7 +430,7 @@ void gridSearch(){
 int main(int argc, char const *argv[])
 {
   srand(time(0));
-  // runAlgorithms();
-  gridSearch();
+  runAlgorithms();
+  // gridSearch();
   return 0;
 }
