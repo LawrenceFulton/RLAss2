@@ -215,7 +215,7 @@ char Agent::ucb(int otherR, int otherC, double var){
 
 
 
-  for (size_t i = 0; i < 4; i++)
+  for (size_t i = 0; i < 5; i++)
   {
     curMove = choices[i];
     curValue = curState->getDirectionValue(0,curMove) + var *  std::sqrt( double(curState->getNState()) / curState->getNAction(curMove)) ;
@@ -228,9 +228,21 @@ char Agent::ucb(int otherR, int otherC, double var){
   }
   curState->incrementAction(bestChoice);
   curState->incrementState();
-  std::cout << bestChoice << std::endl;
+  // std::cout << bestChoice << std::endl;
 
+  bool included = false;
+
+  for (int i = 0; i < 5; i++){
+    if (bestChoice == choices[i]) included = true;
+  }
   
+  if (included == false)
+  {
+    std::cout << "THE MISTAKE  " << std::endl;
+  }
+  
+
+
   return bestChoice;
 }
 
