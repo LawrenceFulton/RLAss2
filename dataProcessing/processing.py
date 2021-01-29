@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-data = np.genfromtxt("./data/reward.txt", delimiter=',',)
+data = np.genfromtxt("/RLAss2/data/reward.txt", delimiter=',',)
 
 # data[data == -1] = 0
 

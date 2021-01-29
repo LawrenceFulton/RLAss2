@@ -584,11 +584,10 @@ void gridSearch(){
 void arena(){
   saveOutput(0,0);
   //////////////////////// CHANGABLE PARAMETER /////////////////////
-  int mAlg = SARSA;
+  int mAlg = QLEARN;
+  int mExp = UCB;
   int cAlg = SARSA;  
-
-  int mExp = EPS;
-  int cExp = EPS;
+  int cExp = UCB;
 
 
   /////////////////// NOT FOR TOUCHING ///////////////////
@@ -603,6 +602,7 @@ void arena(){
   double cC;
 
   // Ininitialisation of param 
+  //MOUSE
   switch(mAlg){
     case(QLEARN): // QLEARN
       if(cExp == EPS){ //EPS
@@ -638,7 +638,8 @@ void arena(){
       }
       break;    
   }
-  switch(mAlg){
+  //CAT
+  switch(cAlg){
     case(QLEARN): // QLEARN
       if(mExp == 0){ //EPS
         mAlpha = 0.42;
@@ -898,7 +899,7 @@ int main(int argc, char const *argv[])
     std::cout << "Please enter which exploration strategy you wish to use for the mouse:\n(0): Epsilion-Greedy, (1): Upper confidence bound" << std::endl; 
     std::cin >> mouseExp;
 
-    // STILL Allows for user to set one agent as random!
+    // STILL Allows for user to set one agent as random (option 3)!
     if(catAlg < 0 || catAlg > 3 || catExp < 0 || catExp > 1 || mouseAlg < 0 || mouseAlg > 3 || mouseExp < 0 || mouseExp > 1){
       std::cout << "Please enter a valid choice for the algorithm and exploration strategy!" <<std::endl; 
       return 0;
