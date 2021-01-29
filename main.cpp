@@ -21,14 +21,15 @@ void saveOutput( double *reward, int len){
 
 }
 
-void runAlgorithms(){
+void runAlgorithms(int catAlg, int catExp, int mouseAlg, int mouseExp){
 
   //////////////////////// CHANGABLE PARAMETER /////////////////////
-  int mAlg = QLEARN;
-  int cAlg = QLEARN;  
 
-  int mExp = EPS;
-  int cExp = UCB;
+  int mAlg = mouseAlg;
+  int cAlg = catAlg;  
+
+  int mExp = mouseExp;
+  int cExp = catExp;
 
   double mAlpha = 0.42;
   double mDiscount = 0.59;
@@ -477,7 +478,20 @@ void gridSearch(){
 int main(int argc, char const *argv[])
 {
   srand(time(0));
-  runAlgorithms();
+  int catAlg, catExp, mouseAlg, mouseExp;
+  std::cout << "Please enter which algorithm you wish to use for the cat:\n(0): Q-learning, (1): Double Q-learning or (2): SARSA" << std::endl; 
+  std::cin >> catAlg;
+  std::cout << "Please enter which exploration strategy you wish to use for the cat:\n(0): Epsilion-Greedy, (1): Upper confidence bound" << std::endl; 
+  std::cin >> catExp;
+  std::cout << "Please enter which algorithm you wish to use for the mouse:\n(0): Q-learning, (1): Double Q-learning or (2): SARSA" << std::endl; 
+  std::cin >> mouseAlg;
+  std::cout << "Please enter which exploration strategy you wish to use for the mouse:\n(0): Epsilion-Greedy, (1): Upper confidence bound" << std::endl; 
+  std::cin >> mouseExp;
+  if(catAlg < 0 || catAlg > 3 || catExp < 0 || catExp > 1 || mouseAlg < 0 || mouseAlg > 3 || mouseExp < 0 || mouseExp > 1){
+    std::cout << "Please enter a valid choice for the algorithm and exploration strategy!" <<std::endl; 
+    return -1;
+  }
+  runAlgorithms(catAlg, catExp, mouseAlg, mouseExp);
   // gridSearch();
   return 0;
 }
