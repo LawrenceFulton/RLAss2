@@ -584,8 +584,8 @@ void gridSearch(){
 void arena(){
   saveOutput(0,0);
   //////////////////////// CHANGABLE PARAMETER /////////////////////
-  int mAlg = SARSA;
-  int cAlg = SARSA;  
+  int mAlg = QLEARN;
+  int cAlg = QLEARN;  
 
   int mExp = EPS;
   int cExp = EPS;
