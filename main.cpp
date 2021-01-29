@@ -512,25 +512,23 @@ void gridSearch(){
 void arena(){
   saveOutput(0,0);
   //////////////////////// CHANGABLE PARAMETER /////////////////////
-  int mAlg = QLEARN;
-  int cAlg = QLEARN;  
+  int mAlg = SARSA;
+  int cAlg = SARSA;  
 
   int mExp = EPS;
-  int cExp = UCB;
-
-  double mAlpha = 0.42;
-  double mDiscount = 0.59;
-  double mEps = 0.005;
-  double mC = 0.1;
-
-  double cAlpha = 0.68;
-  double cDiscount = 0.85;
-  double cEps = 0.0;
-  double cC = 0.002;
+  int cExp = EPS;
 
 
   /////////////////// NOT FOR TOUCHING ///////////////////
+  double mAlpha;
+  double mDiscount;
+  double mEps;
+  double mC;
 
+  double cAlpha;
+  double cDiscount;
+  double cEps;
+  double cC;
 
   // Ininitialisation of param 
   switch(mAlg){
