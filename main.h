@@ -10,6 +10,7 @@
 #include <time.h>       /* time */
 #include <iterator>
 #include <fstream>
+#include <string.h>
 
 
 #define ROWS 5
