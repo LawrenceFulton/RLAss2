@@ -558,9 +558,11 @@ int main(int argc, char const *argv[])
   std::cin >> mouseAlg;
   std::cout << "Please enter which exploration strategy you wish to use for the mouse:\n(0): Epsilion-Greedy, (1): Upper confidence bound" << std::endl; 
   std::cin >> mouseExp;
+
+  // STILL Allows for user to set one agent as random!
   if(catAlg < 0 || catAlg > 3 || catExp < 0 || catExp > 1 || mouseAlg < 0 || mouseAlg > 3 || mouseExp < 0 || mouseExp > 1){
     std::cout << "Please enter a valid choice for the algorithm and exploration strategy!" <<std::endl; 
-    return -1;
+    return 0;
   }
   runAlgorithms(catAlg, catExp, mouseAlg, mouseExp);
   // gridSearch();
