@@ -728,7 +728,6 @@ void arena(){
         mOldState = mouse.getInternalState();
         cOldState = cat.getInternalState();
       }while (mReward == 0);
-      std::cout << "mReward " << mReward << std::endl;
       arr[j] = mReward;
     }
     // printResults(epoche, arr);
