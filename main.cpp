@@ -222,11 +222,26 @@ void runAlgorithms(){
 }
 
 void gridSearch(){
-  int mAlg = QLEARN;
-  int cAlg = RANDOM;  
 
-  int mExp = UCB;
-  int cExp = EPS;
+  //////////////////////// CHANGABLE PARAMETER /////////////////////
+  int mAlg = QLEARN;
+  int cAlg = QLEARN;  
+
+  int mExp = EPS;
+  int cExp = UCB;
+
+  double mAlpha = 0.42;
+  double mDiscount = 0.59;
+  double mEps = 0.005;
+  double mC = 0.1;
+
+  double cAlpha = 0.68;
+  double cDiscount = 0.85;
+  double cEps = 0.0;
+  double cC = 0.002;
+
+
+  /////////////////// NOT FOR TOUCHING ///////////////////
 
   World world(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS, &world);
@@ -236,16 +251,6 @@ void gridSearch(){
   int cMode = (cAlg == DOUBLEQ)? 1: 0;
   
   int repetitions = 10000;
-
-  double mAlpha = 0.11;
-  double mDiscount = 0.2;
-  double mEps = 0.01;
-  double mC = 0.1;
-
-  double cAlpha = 0.11;
-  double cDiscount = 0.2;
-  double cEps = 0.01;
-  double cC = 0.1;
 
 
 
@@ -287,17 +292,17 @@ void gridSearch(){
   if (mAlg == RANDOM) mEps = 0;
   if (cAlg == RANDOM) cEps = 0;
   
-  for (size_t a = 50; a < 85; a++)
+  for (size_t a = 10; a < 85; a+=10)
   {
-    mAlpha = double(a) / 100;
+    cAlpha = double(a) / 100;
 
-    for (size_t d = 70; d < 90; d++)
+    for (size_t d = 9; d < 90; d+=10)
     {
-      mDiscount = double(d) / 100;
+      cDiscount = double(d) / 100;
 
-      for (size_t e = 1; e < 20; e++)
+      for (size_t e = 1; e < 52; e+=10)
       {
-        mC = double(e)/1000;
+        cC = double(e)/1000;
         
         // should be done for memory allocation issues 
         cat.deleteStates();
@@ -443,9 +448,9 @@ void gridSearch(){
           arr[i] = mReward;
 
 
-          if (mReward == 1) sum ++;
+          if (cReward == 1) sum ++;
         }
-        std::cout << mAlpha << ", " << mDiscount << ", " << mC << ", " << double(sum) / repetitions << std::endl;
+        std::cout << cAlpha << ", " << cDiscount << ", " << cC << ", " << double(sum) / repetitions << std::endl;
         sum = 0;
       }
     }
