@@ -226,7 +226,7 @@ void runAlgorithms(int catAlg, int catExp, int mouseAlg, int mouseExp){
         mBestMove = (mAlg != SARSA)? mouse.epsGreedy(mMode, mEps): mBestMoveNewState;            
       }else
       {
-        mBestMove = (cAlg!=SARSA)? mouse.ucb(mC): mBestMoveNewState;
+        mBestMove = (mAlg!=SARSA)? mouse.ucb(mC): mBestMoveNewState;
       }
       
       if (cExp == EPS)
@@ -585,25 +585,26 @@ void arena(){
   saveOutput(0,0);
   //////////////////////// CHANGABLE PARAMETER /////////////////////
   int mAlg = QLEARN;
-  int cAlg = QLEARN;  
+  int cAlg = SARSA;  
 
-  int mExp = EPS;
+  int mExp = UCB;
   int cExp = EPS;
 
 
   /////////////////// NOT FOR TOUCHING ///////////////////
-  double mAlpha;
-  double mDiscount;
-  double mEps;
-  double mC;
+  double mAlpha = 0;
+  double mDiscount = 0;
+  double mEps = 0;
+  double mC = 0;
 
-  double cAlpha;
-  double cDiscount;
-  double cEps;
-  double cC;
+  double cAlpha = 0 ;
+  double cDiscount = 0 ;
+  double cEps = 0;
+  double cC = 0;
 
   // Ininitialisation of param 
-  switch(mAlg){
+  //MOUSE
+  switch(cAlg){
     case(QLEARN): // QLEARN
       if(cExp == EPS){ //EPS
         cAlpha = 0.24;
@@ -638,9 +639,10 @@ void arena(){
       }
       break;    
   }
+  //CAT
   switch(mAlg){
     case(QLEARN): // QLEARN
-      if(mExp == 0){ //EPS
+      if(mExp == EPS){ //EPS
         mAlpha = 0.42;
         mDiscount = 0.19;
         mEps = 0.02;
@@ -759,7 +761,7 @@ void arena(){
           mBestMove = (mAlg != SARSA)? mouse.epsGreedy(mMode, mEps): mBestMoveNewState;            
         }else
         {
-          mBestMove = (cAlg!=SARSA)? mouse.ucb(mC): mBestMoveNewState;
+          mBestMove = (mAlg!=SARSA)? mouse.ucb(mC): mBestMoveNewState;
         }
         
         if (cExp == EPS)
@@ -898,7 +900,7 @@ int main(int argc, char const *argv[])
     std::cout << "Please enter which exploration strategy you wish to use for the mouse:\n(0): Epsilion-Greedy, (1): Upper confidence bound" << std::endl; 
     std::cin >> mouseExp;
 
-    // STILL Allows for user to set one agent as random!
+    // STILL Allows for user to set one agent as random (option 3)!
     if(catAlg < 0 || catAlg > 3 || catExp < 0 || catExp > 1 || mouseAlg < 0 || mouseAlg > 3 || mouseExp < 0 || mouseExp > 1){
       std::cout << "Please enter a valid choice for the algorithm and exploration strategy!" <<std::endl; 
       return 0;

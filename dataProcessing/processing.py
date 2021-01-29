@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-data1 = np.genfromtxt("./data/reward.txt", delimiter=',',)
-data2 = np.genfromtxt("./data/epsSARSA/SARSA_EPS_SARSA_UCB.txt", delimiter=',',)
+data1 = np.genfromtxt("/RLAss2/data/reward.txt", delimiter=',',)
+data2 = np.getfromtxt("/RLAss2/data/reward.txt", delimiter=',',)
 
 # data[data == -1] = 0
 data1 = data1.mean(axis = 0)
