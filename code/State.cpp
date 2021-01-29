@@ -3,9 +3,6 @@ State::State(/* args */)
 {
 }
 
-State::State(int mouseR, int mouseC, int catR, int catC){
-  setValues(mouseR, mouseC, catR, catC, 0);
-}
 
 
 State::~State()
@@ -26,6 +23,13 @@ void State::setValues(int ownR, int ownC, int otherR, int otherC, double r){
   this->otherC = otherC;
 
   this->r = r;
+
+  nLeft = 1;
+  nRight = 1;
+  nTop = 1;
+  nBottom = 1;
+  nStay = 1;
+  nState = 1;
 }
 
 void State::setTransition(int specialCase, Location* loc){
@@ -48,6 +52,7 @@ void State::setTransition(int specialCase, Location* loc){
   toRight0 = right ? double(rand())/RAND_MAX : -DBL_MAX;
   toTop0 = top ? double(rand())/RAND_MAX : -DBL_MAX;
   toBottom0 = bottom ? double(rand())/RAND_MAX : -DBL_MAX; 
+  toStay0 = double(rand())/RAND_MAX;
 
 
   // used in double q learning 
@@ -55,6 +60,7 @@ void State::setTransition(int specialCase, Location* loc){
   toRight1 = right ? double(rand())/RAND_MAX : -DBL_MAX;
   toTop1 = top ? double(rand())/RAND_MAX : -DBL_MAX;
   toBottom1 = bottom ? double(rand())/RAND_MAX : -DBL_MAX; 
+  toStay1 =  double(rand())/RAND_MAX;
 
 }
 
@@ -73,12 +79,18 @@ char State::argMaxMove(int mode){
 
     best = (toBottom0 > max) ? 'd' : best;
     max = (toBottom0 > max) ? toBottom0 : max;   
+
+    best = (toStay0 > max) ? 's' : best;
+    max = (toStay0 > max) ? toStay0 : max;
+
+
   }else
   {
     double sumLeft = (toLeft0 == -DBL_MAX) ? -DBL_MAX: toLeft0 + toLeft1;
     double sumRight = (toRight0 == -DBL_MAX) ? -DBL_MAX: toRight0 + toRight1;
     double sumTop = (toTop0 == -DBL_MAX) ? -DBL_MAX: toTop0 + toTop1;
     double sumBottom = (toBottom0 == -DBL_MAX) ? -DBL_MAX: toBottom0 + toBottom1;
+    double sumStay = (toBottom0 == -DBL_MAX) ? -DBL_MAX: toStay0 + toStay1;
     
     max = sumLeft;
 
@@ -90,6 +102,9 @@ char State::argMaxMove(int mode){
 
     best = (sumBottom > max) ? 'd' : best;
     max = (sumBottom > max) ? sumBottom : max;   
+
+    best = (sumStay > max) ? 's' : best;
+    max = (sumStay > max) ? sumStay : max;    
   }
 
 
@@ -108,8 +123,7 @@ double State::maxValue(){
   max = (toRight0 > max) ? toRight0 : max;
   max = (toTop0 > max) ? toTop0 : max;
   max = (toBottom0 > max) ? toBottom0 : max; 
-
-
+  max = (toStay0 > max) ? toStay0: max;
   return max; 
 }
 
@@ -132,6 +146,9 @@ void State::setDirectionValue(int set, char direction, double newVal){
     case 'd': // down
       toBottom0 = newVal;
       break;
+    case 's':
+      toStay0 = newVal;
+      break;
     default:
       std::cout << "There has been an error, the direction cant be " << direction << std::endl;
     } 
@@ -151,11 +168,13 @@ void State::setDirectionValue(int set, char direction, double newVal){
     case 'd': // down
       toBottom1 = newVal;
       break;
+    case 's':
+      toStay1 = newVal;
+      break;      
     default:
       std::cout << "There has been an error, the direction cant be " << direction << std::endl;
     }  
   }
-   
 }
 
 // directionValue also known as Q(t,a)
@@ -168,7 +187,6 @@ double State::getDirectionValue(int set, char direction){
     returnValue = (set == SINGLE)? toLeft0: toLeft1;
     break;
   case 'r': // right
-
     returnValue = (set == SINGLE)? toRight0: toRight1;
     break;
   case 't': // up
@@ -177,6 +195,66 @@ double State::getDirectionValue(int set, char direction){
   case 'd': // down
     returnValue = (set == SINGLE)? toBottom0: toBottom1;
     break;
-  } 
+  case 's':
+    returnValue = (set == SINGLE)? toStay0: toStay1;
+  }
+
   return returnValue;
+}
+
+
+int State::getNAction(char direction){
+  int nValue;
+  switch (direction)
+  {
+  case 'l': // left
+    nValue = nLeft;
+    break;
+  case 'r': // right
+    nValue = nRight;
+    break;
+  case 't': // up
+    nValue = nTop;
+    break;
+  case 'd': // down
+    nValue = nBottom;
+    break;
+  case 's':
+    nValue = nStay;
+    break;
+  default:
+    std::cout << "cant handle direction " << direction << std::endl;
+  }
+  return nValue;
+}
+
+int State::getNState(){
+  return nState;
+}
+
+void State::incrementAction(char direction){
+  switch (direction)
+  {
+  case 'l': // left
+    nLeft++;
+    break;
+  case 'r': // right
+    nRight++;
+    break;
+  case 't': // up
+    nTop++;
+    break;
+  case 'd': // down
+    nBottom++;
+    break;
+  case 's':
+    nStay++;
+    break;
+  default:
+    std::cout << "cant handle direction " << direction << std::endl;
+  }
+}
+
+void State::incrementState(){
+  nState++;
 }

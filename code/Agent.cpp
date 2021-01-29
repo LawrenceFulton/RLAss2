@@ -2,16 +2,29 @@
 
 Agent::Agent(){};
 
-Agent::Agent(int agent, int r, int c, int maxRow, int maxCol ){
+Agent::Agent(int agent, int r, int c, int maxRow, int maxCol, World* world ){
   this->r = r;
   this->c = c;
   this->maxRow = maxRow;
   this->maxCol = maxCol;
+  this->agent = agent;
+  this->world = world;
   // world = world1;
+  init();
+}
 
+Agent::~Agent(){
+
+};
+
+//////////////////////////////
+
+void Agent::init(){
   // can only be used if there are only two agents (1 cat and 1 mouse)!
   // not using multidimensional array since it would get really messy imo 
-  states = (State*) calloc(pow(maxRow*maxCol,2.0), sizeof(State));
+
+  int nStates = pow(maxRow*maxCol,2.0);
+  states = new State[nStates];
 
   int mc2mr = maxCol*maxRow*maxCol;
   int mcmr = maxCol*maxRow;
@@ -48,12 +61,9 @@ Agent::Agent(int agent, int r, int c, int maxRow, int maxCol ){
           states[mR*mc2mr   +mC*mcmr + cR*maxCol + cC].id = counter;
           counter++;
         }
+
+  learnTransitions(world);
 }
-
-Agent::~Agent(){
-};
-
-//////////////////////////////
 
 
 // for debug, can be deleted later 
@@ -82,6 +92,8 @@ void Agent::move(char direction){
     break;
   case 'd': // down
     r++;
+    break;
+  case 's': // stay
     break;
   }
 }
@@ -118,7 +130,7 @@ void Agent::printInteralStates(){
 
 
 // overtakes the transition from the world created in the main file 
-void Agent::learnTransitions(int agent, World* world){
+void Agent::learnTransitions(World* world){
   Location* loc;
   int specialCase;
   int stateId;
@@ -155,22 +167,22 @@ void Agent::learnTransitions(int agent, World* world){
 
 // int agent = 0 for mouse and = 1 for cat
 // otherR/otherC are the rows and columns of the other agent 
-int Agent::getStateNumber(int agent, int otherR, int otherC){
+int Agent::getStateNumber(int otherR, int otherC){
   return (r*maxCol*maxCol*maxRow + c *maxCol*maxRow +otherR* maxCol + otherC);
 }
 
-State* Agent::getInternalState(int agent, int otherR, int otherC){
-  int stateNumber = getStateNumber(agent,otherR,otherC);
+State* Agent::getInternalState(int otherR, int otherC){
+  int stateNumber = getStateNumber(otherR,otherC);
   return(&states[stateNumber]);
 }
 
-char Agent::getBestMove(int agent, int otherR, int otherC,int mode, double eps){
+char Agent::epsGreedy(int otherR, int otherC,int mode, double eps){
   char bestMove;
 
   double unif = double(rand())/ RAND_MAX;
   double value;
   int choice;
-  State* curState = getInternalState(agent,otherR, otherC);
+  State* curState = getInternalState(otherR, otherC);
 
   // if the value taken from the uniform distribution is smaller than
   // the epsilon value (eps) we take the best move, else we find a random possible 
@@ -185,28 +197,56 @@ char Agent::getBestMove(int agent, int otherR, int otherC,int mode, double eps){
 
     do
     {
-      choice = rand() % 4; // is there an equal distribution between 0 and 100? aka is it fully random?
-      switch (choice)
-      {
-      case 0:
-        value = curState->getDirectionValue(0,'l');
-        bestMove = 'l';
-        break;
-      case 1:
-        value = curState->getDirectionValue(0,'r');
-        bestMove = 'r';
-        break;
-      case 2:
-        value = curState->getDirectionValue(0,'t');
-        bestMove = 't';
-        break;
-      case 3:
-        value = curState->getDirectionValue(0,'d');
-        bestMove = 'd';
-        break;
-      }    
+      choice = rand() % 5; 
+      bestMove = choices[choice];
+      value = curState->getDirectionValue(0,bestMove);
+          
     } while (value == -DBL_MAX);
   }
   return bestMove;
 }
 
+char Agent::ucb(int otherR, int otherC, double var){
+  State* curState = getInternalState(otherR, otherC);
+  char bestChoice, curMove;
+  double maxValue = -DBL_MAX;
+  double curValue;
+
+
+
+
+  for (size_t i = 0; i < 5; i++)
+  {
+    curMove = choices[i];
+    curValue = curState->getDirectionValue(0,curMove) + var *  std::sqrt( double(curState->getNState()) / curState->getNAction(curMove)) ;
+
+    if (curValue > maxValue)
+    {
+      maxValue = curValue;
+      bestChoice = curMove;
+    }
+  }
+  curState->incrementAction(bestChoice);
+  curState->incrementState();
+  // std::cout << bestChoice << std::endl;
+
+  bool included = false;
+
+  for (int i = 0; i < 5; i++){
+    if (bestChoice == choices[i]) included = true;
+  }
+  
+  if (included == false)
+  {
+    std::cout << "THE MISTAKE  " << std::endl;
+  }
+  
+
+
+  return bestChoice;
+}
+
+
+void Agent::deleteStates(){
+  delete [] states;
+}

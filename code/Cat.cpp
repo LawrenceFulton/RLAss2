@@ -3,22 +3,24 @@
 
 Cat::Cat(){};
 
-Cat::Cat(int r, int c, int maxRow, int maxCol):Agent::Agent(CAT_ID, r,c,maxRow,maxCol){
+Cat::Cat(int r, int c, int maxRow, int maxCol, World* world):Agent::Agent(CAT_ID, r,c,maxRow,maxCol, world){
   steps = 0;
 } 
-Cat::~Cat(){};
+Cat::~Cat(){
+  deleteStates();
+};
 
 
 State* Cat::getInternalState(){
-  return Agent::getInternalState(CAT_ID,mouse->getR(),mouse->getC());
+  return Agent::getInternalState(mouse->getR(),mouse->getC());
 }
 
-char Cat::getBestMove(int mode, double eps){
-  return Agent::getBestMove(CAT_ID,mouse->getR(),mouse->getC(),mode,eps);
+char Cat::epsGreedy(int mode, double eps){
+  return Agent::epsGreedy(mouse->getR(),mouse->getC(),mode,eps);
 }
 
-void Cat::learnTransitions(World *world){
-  Agent::learnTransitions(CAT_ID, world);
+char Cat::ucb(double c){
+  return Agent::ucb(mouse->getR(),mouse->getC(), c);
 }
 
 void Cat::setMouse(Mouse* mouse){

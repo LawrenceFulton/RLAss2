@@ -21,13 +21,13 @@ private:
 public:
   Mouse(/* args */);
   Mouse(int x, int y);
-  Mouse(int x, int y, int maxRow, int maxCOl);
+  Mouse(int x, int y, int maxRow, int maxCOl, World* world);
   ~Mouse();
 
 
-  char getBestMove(int mode, double eps);
+  char epsGreedy(int mode, double eps);
+  char ucb(double c);
   State* getInternalState();
-  void learnTransitions(World* world);
   void setCat(Cat* cat);
 };
 

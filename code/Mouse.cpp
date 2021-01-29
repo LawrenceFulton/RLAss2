@@ -12,27 +12,31 @@ Mouse::Mouse(int x, int y){
   steps = 0;
 }
 
-Mouse::Mouse(int x,int y, int maxRow, int maxCol):Agent(MOUSE_ID, x, y, maxRow,maxCol){
+Mouse::Mouse(int x,int y, int maxRow, int maxCol, World* world):Agent(MOUSE_ID, x, y, maxRow,maxCol, world){
   steps = 0;
 }
 
-char Mouse::getBestMove(int mode, double eps){
-  return Agent::getBestMove(MOUSE_ID,cat->getR(), cat->getC(),mode, eps);
+char Mouse::epsGreedy(int mode, double eps){
+  return Agent::epsGreedy(cat->getR(), cat->getC(),mode, eps);
 }
+
+char Mouse::ucb(double c){
+  return Agent::ucb(cat->getR(),cat->getC(), c);
+}
+
 
 State* Mouse::getInternalState(){
-  return (Agent::getInternalState(MOUSE_ID,cat->getR(), cat->getC()));
+  return (Agent::getInternalState(cat->getR(), cat->getC()));
 }
 
 
-void Mouse::learnTransitions(World* world){
-  Agent::learnTransitions(MOUSE_ID, world);
-}
 
 void Mouse::setCat(Cat* cat){
   this->cat = cat;
 }
 
 
-Mouse::~Mouse(){}
+Mouse::~Mouse(){
+  deleteStates();
+}
 
