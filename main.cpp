@@ -549,22 +549,34 @@ void gridSearch(){
 int main(int argc, char const *argv[])
 {
   srand(time(0));
-  int catAlg, catExp, mouseAlg, mouseExp;
-  std::cout << "Please enter which algorithm you wish to use for the cat:\n(0): Q-learning, (1): Double Q-learning or (2): SARSA" << std::endl; 
-  std::cin >> catAlg;
-  std::cout << "Please enter which exploration strategy you wish to use for the cat:\n(0): Epsilion-Greedy, (1): Upper confidence bound" << std::endl; 
-  std::cin >> catExp;
-  std::cout << "Please enter which algorithm you wish to use for the mouse:\n(0): Q-learning, (1): Double Q-learning or (2): SARSA" << std::endl; 
-  std::cin >> mouseAlg;
-  std::cout << "Please enter which exploration strategy you wish to use for the mouse:\n(0): Epsilion-Greedy, (1): Upper confidence bound" << std::endl; 
-  std::cin >> mouseExp;
 
-  // STILL Allows for user to set one agent as random!
-  if(catAlg < 0 || catAlg > 3 || catExp < 0 || catExp > 1 || mouseAlg < 0 || mouseAlg > 3 || mouseExp < 0 || mouseExp > 1){
-    std::cout << "Please enter a valid choice for the algorithm and exploration strategy!" <<std::endl; 
-    return 0;
+  bool manual = true;
+
+  if (manual)
+  {
+    int catAlg, catExp, mouseAlg, mouseExp;
+    std::cout << "Please enter which algorithm you wish to use for the cat:\n(0): Q-learning, (1): Double Q-learning or (2): SARSA" << std::endl; 
+    std::cin >> catAlg;
+    std::cout << "Please enter which exploration strategy you wish to use for the cat:\n(0): Epsilion-Greedy, (1): Upper confidence bound" << std::endl; 
+    std::cin >> catExp;
+    std::cout << "Please enter which algorithm you wish to use for the mouse:\n(0): Q-learning, (1): Double Q-learning or (2): SARSA" << std::endl; 
+    std::cin >> mouseAlg;
+    std::cout << "Please enter which exploration strategy you wish to use for the mouse:\n(0): Epsilion-Greedy, (1): Upper confidence bound" << std::endl; 
+    std::cin >> mouseExp;
+
+    // STILL Allows for user to set one agent as random!
+    if(catAlg < 0 || catAlg > 3 || catExp < 0 || catExp > 1 || mouseAlg < 0 || mouseAlg > 3 || mouseExp < 0 || mouseExp > 1){
+      std::cout << "Please enter a valid choice for the algorithm and exploration strategy!" <<std::endl; 
+      return 0;
+    }
+    runAlgorithms(catAlg, catExp, mouseAlg, mouseExp);
+  }else
+  {
+    
   }
-  runAlgorithms(catAlg, catExp, mouseAlg, mouseExp);
+  
+
+
   // gridSearch();
   return 0;
 }
