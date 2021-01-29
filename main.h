@@ -20,9 +20,10 @@
 #define MOUSE 0
 #define CAT 1
 
-#define SARSA 2
+
 #define QLEARN 0
 #define DOUBLEQ 1
+#define SARSA 2
 #define RANDOM 3
 
 #define EPS 0

@@ -41,6 +41,77 @@ void runAlgorithms(int catAlg, int catExp, int mouseAlg, int mouseExp){
   double cEps = 0.0;
   double cC = 0.002;
 
+  switch(catAlg){
+    case(0): // QLEARN
+      if(catExp==0){ //EPS
+        cAlpha = 0.24;
+        cDiscount = 0.47;
+        cEps = 0.005;
+      } else { //UCB
+        cAlpha = 0.68;
+        cDiscount = 0.85;
+        cC = 0.002;
+      }
+      break;
+    case(1): //QQLEARN
+      if(catExp==0){ //EPS
+        cAlpha = 0.29;
+        cDiscount = 0.42;
+        cEps = 0.007;
+      } else { //UCB
+        cAlpha = 0.55;
+        cDiscount = 0.85;
+        cC = 0.004;
+      }
+      break;
+    case(2)://SARSA
+      if(catExp==0){//EPS
+        cAlpha = 0.23;
+        cDiscount = 0.38;
+        cEps = 0.006;
+      } else {//UCB
+        cAlpha = 0.32;
+        cDiscount = 0.7;
+        cC = 0.016;
+      }
+      break;    
+  }
+  switch(mouseAlg){
+    case(0): // QLEARN
+      if(mouseExp==0){ //EPS
+        mAlpha = 0.42;
+        mDiscount = 0.19;
+        mEps = 0.02;
+      } else { //UCB
+        mAlpha = 0.56;
+        mDiscount = 0.85;
+        mC = 0.001;
+      }
+      break;
+    case(1): //QQLEARN
+      if(mouseExp==0){ //EPS
+        mAlpha = 0.51;
+        mDiscount = 0.53;
+        mEps = 0.003;
+      } else { //UCB
+        mAlpha = 0.82;
+        mDiscount = 0.89;
+        mC = 0.007;
+      }
+      break;
+    case(2)://SARSA
+      if(mouseExp==0){//EPS
+        mAlpha = 0.43;
+        mDiscount = 0.52;
+        mEps = 0.002;
+      } else {//UCB
+        mAlpha = 0.76;
+        mDiscount = 0.82;
+        mC = 0.001;
+      }
+      break;    
+  }
+
 
   /////////////////// NOT FOR TOUCHING ///////////////////
 
