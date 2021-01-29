@@ -3,9 +3,6 @@ State::State(/* args */)
 {
 }
 
-State::State(int mouseR, int mouseC, int catR, int catC){
-  setValues(mouseR, mouseC, catR, catC, 0);
-}
 
 
 State::~State()
@@ -26,6 +23,13 @@ void State::setValues(int ownR, int ownC, int otherR, int otherC, double r){
   this->otherC = otherC;
 
   this->r = r;
+
+  nLeft = 1;
+  nRight = 1;
+  nTop = 1;
+  nBottom = 1;
+  nStay = 1;
+  nState = 1;
 }
 
 void State::setTransition(int specialCase, Location* loc){
@@ -183,7 +187,6 @@ double State::getDirectionValue(int set, char direction){
     returnValue = (set == SINGLE)? toLeft0: toLeft1;
     break;
   case 'r': // right
-
     returnValue = (set == SINGLE)? toRight0: toRight1;
     break;
   case 't': // up
@@ -194,8 +197,64 @@ double State::getDirectionValue(int set, char direction){
     break;
   case 's':
     returnValue = (set == SINGLE)? toStay0: toStay1;
-    
   }
 
   return returnValue;
+}
+
+
+int State::getNAction(char direction){
+  int nValue;
+  switch (direction)
+  {
+  case 'l': // left
+    nValue = nLeft;
+    break;
+  case 'r': // right
+    nValue = nRight;
+    break;
+  case 't': // up
+    nValue = nTop;
+    break;
+  case 'd': // down
+    nValue = nBottom;
+    break;
+  case 's':
+    nValue = nStay;
+    break;
+  default:
+    std::cout << "cant handle direction " << direction << std::endl;
+  }
+  return nValue;
+}
+
+int State::getNState(){
+  return nState;
+}
+
+void State::incrementAction(char direction){
+  switch (direction)
+  {
+  case 'l': // left
+    nLeft++;
+    break;
+  case 'r': // right
+    nRight++;
+    break;
+  case 't': // up
+    nTop++;
+    break;
+  case 'd': // down
+    nBottom++;
+    break;
+  case 's':
+    nStay++;
+    break;
+  default:
+    std::cout << "cant handle direction " << direction << std::endl;
+  }
+}
+
+void State::incrementState(){
+  nState++;
 }

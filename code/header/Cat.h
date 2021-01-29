@@ -23,7 +23,8 @@ public:
   Cat(int r, int c, int maxRow, int maxCol, World* world);
   ~Cat();
 
-  char getBestMove(int mode, double eps);
+  char epsGreedy(int mode, double eps);
+  char ucb(double c);
   State* getInternalState();
   void setMouse(Mouse* mouse);
 };

@@ -3,7 +3,7 @@
 
 void printResults(int length, double *arr){
   int sum = 0;
-  std::cout << "rewards123:" << std::endl;
+  // std::cout << "rewards123:" << std::endl;
   for (size_t i = 0; i < length; i++)
   {
     if(arr[i] == 1) sum +=1;
@@ -22,8 +22,26 @@ void saveOutput( double *reward, int len){
 }
 
 void runAlgorithms(){
-  int mAlg = DOUBLEQ;
+
+  //////////////////////// CHANGABLE PARAMETER /////////////////////
+  int mAlg = QLEARN;
   int cAlg = QLEARN;  
+
+  int mExp = EPS;
+  int cExp = UCB;
+
+  double mAlpha = 0.42;
+  double mDiscount = 0.59;
+  double mEps = 0.005;
+  double mC = 0.1;
+
+  double cAlpha = 0.68;
+  double cDiscount = 0.85;
+  double cEps = 0.0;
+  double cC = 0.002;
+
+
+  /////////////////// NOT FOR TOUCHING ///////////////////
 
   World world(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS, &world);
@@ -34,13 +52,6 @@ void runAlgorithms(){
   
   int repetitions = 10000;
 
-  double cAlpha = 0.29;
-  double cDiscount = 0.42;
-  double cEps = 0.01;
-
-  double mAlpha = 0.43;
-  double mDiscount = 0.52;
-  double mEps = 0.01;
 
   int sum = 0;
   int binRan; // needed for the coinflip in double Q-learning
@@ -77,34 +88,46 @@ void runAlgorithms(){
   cat.setMouse(&mouse);
   mouse.setCat(&cat);
 
+
+
   if (mAlg == RANDOM) mEps = 0;
   if (cAlg == RANDOM) cEps = 0;
   
 
 
-
-
   for (size_t i = 0; i < repetitions; i++)
   {
     // resetting coordinates for each trial (could maybe do random)
-    std::cout << i << std::endl;
 
-
-    mouse.setCoordinates(rand() % (ROWS - 2), rand() % (ROWS - 2));
+    mouse.setCoordinates(0,0);
     cat.setCoordinates(ROWS - 2, COLUMNS - 2); // will be just in front of the exit
 
     mOldState =  mouse.getInternalState();
     cOldState = cat.getInternalState();
 
-    mBestMoveNewState = mouse.getBestMove(mMode,mEps);
-    cBestMoveNewState = cat.getBestMove(cMode,cEps);   
+    mBestMoveNewState = (mExp == EPS) ? mouse.epsGreedy(mMode,mEps):mouse.ucb(mC); 
+    cBestMoveNewState = (cExp == EPS) ? cat.epsGreedy(cMode, cEps): cat.ucb(cC);
 
     do // reward will stay 0 until either the mouse got eaten or managed to esceape 
     {
 
       // the current agent state Q 
-      mBestMove = (mAlg != SARSA)? mouse.getBestMove(mMode, mEps): mBestMoveNewState;
-      cBestMove = (cAlg != SARSA)? cat.getBestMove(cMode, cEps): cBestMoveNewState;
+      if (mExp == EPS)
+      {
+        mBestMove = (mAlg != SARSA)? mouse.epsGreedy(mMode, mEps): mBestMoveNewState;            
+      }else
+      {
+        mBestMove = (cAlg!=SARSA)? mouse.ucb(mC): mBestMoveNewState;
+      }
+      
+      if (cExp == EPS)
+      {
+        cBestMove = (cAlg != SARSA)? cat.epsGreedy(cMode, cEps): cBestMoveNewState;            
+      }else
+      {
+        cBestMove = (cAlg!=SARSA)? cat.ucb(mC): cBestMoveNewState;
+      }
+
 
       mouse.move(mBestMove);
       cat.move(cBestMove);
@@ -121,7 +144,8 @@ void runAlgorithms(){
       switch (mAlg)
       {
       case SARSA: //////// SARSA 
-        mBestMoveNewState = mouse.getBestMove(mMode, mEps);
+
+        mBestMoveNewState =(mExp == EPS)?  mouse.epsGreedy(mMode, mEps):mouse.ucb(mC) ;
 
         //Bellman equation for mouse   (-testReward)
         mNewVal = mOldState->getDirectionValue(mMode, mBestMove) 
@@ -164,7 +188,7 @@ void runAlgorithms(){
       {
       case SARSA: 
 
-        cBestMoveNewState = cat.getBestMove(cMode,cEps);
+        cBestMoveNewState = (cExp == EPS)? cat.epsGreedy(cMode,cEps): cat.ucb(cC);
 
         // important is the -1 infront of reward reward for the cat
         cNewVal = cOldState->getDirectionValue(cMode,cBestMove) 
@@ -206,16 +230,34 @@ void runAlgorithms(){
       cOldState = cat.getInternalState();
     }while (mReward == 0);
     arr[i] = mReward;
-
   }
+
   
   printResults(repetitions, arr);
   saveOutput(arr, repetitions);
 }
 
 void gridSearch(){
-  int mAlg = DOUBLEQ;
-  int cAlg = RANDOM;  
+
+  //////////////////////// CHANGABLE PARAMETER /////////////////////
+  int mAlg = QLEARN;
+  int cAlg = QLEARN;  
+
+  int mExp = EPS;
+  int cExp = UCB;
+
+  double mAlpha = 0.42;
+  double mDiscount = 0.59;
+  double mEps = 0.005;
+  double mC = 0.1;
+
+  double cAlpha = 0.68;
+  double cDiscount = 0.85;
+  double cEps = 0.0;
+  double cC = 0.002;
+
+
+  /////////////////// NOT FOR TOUCHING ///////////////////
 
   World world(ROWS,COLUMNS);
   Mouse mouse(0,0,ROWS, COLUMNS, &world);
@@ -225,16 +267,6 @@ void gridSearch(){
   int cMode = (cAlg == DOUBLEQ)? 1: 0;
   
   int repetitions = 10000;
-
-  double mAlpha = 0.11;
-  double mDiscount = 0.2;
-  double mEps = 0.01;
-
-  double cAlpha = 0.11;
-  double cDiscount = 0.2;
-  double cEps = 0.01;
-
-
 
   int sum = 0;
   int binRan; // needed for the coinflip in double Q-learning
@@ -274,17 +306,17 @@ void gridSearch(){
   if (mAlg == RANDOM) mEps = 0;
   if (cAlg == RANDOM) cEps = 0;
   
-  for (size_t a = 30; a < 55; a++)
+  for (size_t a = 10; a < 85; a+=10)
   {
-    mAlpha = double(a) / 100;
+    cAlpha = double(a) / 100;
 
-    for (size_t d = 40; d < 60; d++)
+    for (size_t d = 9; d < 90; d+=10)
     {
-      mDiscount = double(d) / 100;
+      cDiscount = double(d) / 100;
 
-      for (size_t e = 1; e < 15; e++)
+      for (size_t e = 1; e < 52; e+=10)
       {
-        mEps = double(e)/1000;
+        cC = double(e)/1000;
         
         // should be done for memory allocation issues 
         cat.deleteStates();
@@ -297,21 +329,35 @@ void gridSearch(){
         {
           // resetting coordinates for each trial (could maybe do random)
 
-          mouse.setCoordinates(rand() % (ROWS - 2), rand() % (ROWS - 2));
+          mouse.setCoordinates(0,0);
           cat.setCoordinates(ROWS - 2, COLUMNS - 2); // will be just in front of the exit
 
           mOldState =  mouse.getInternalState();
           cOldState = cat.getInternalState();
 
-          mBestMoveNewState = mouse.getBestMove(mMode,mEps);
-          cBestMoveNewState = cat.getBestMove(cMode,cEps);   
+          mBestMoveNewState = (mExp == EPS) ? mouse.epsGreedy(mMode,mEps):mouse.ucb(mC); 
+          cBestMoveNewState = (cExp == EPS) ? cat.epsGreedy(cMode, cEps): cat.ucb(cC);
 
           do // reward will stay 0 until either the mouse got eaten or managed to esceape 
           {
 
             // the current agent state Q 
-            mBestMove = (mAlg != SARSA)? mouse.getBestMove(mMode, mEps): mBestMoveNewState;
-            cBestMove = (cAlg != SARSA)? cat.getBestMove(cMode, cEps): cBestMoveNewState;
+            if (mExp == EPS)
+            {
+              mBestMove = (mAlg != SARSA)? mouse.epsGreedy(mMode, mEps): mBestMoveNewState;            
+            }else
+            {
+              mBestMove = (cAlg!=SARSA)? mouse.ucb(mC): mBestMoveNewState;
+            }
+            
+            if (cExp == EPS)
+            {
+              cBestMove = (cAlg != SARSA)? cat.epsGreedy(cMode, cEps): cBestMoveNewState;            
+            }else
+            {
+              cBestMove = (cAlg!=SARSA)? cat.ucb(mC): cBestMoveNewState;
+            }
+
 
             mouse.move(mBestMove);
             cat.move(cBestMove);
@@ -328,7 +374,8 @@ void gridSearch(){
             switch (mAlg)
             {
             case SARSA: //////// SARSA 
-              mBestMoveNewState = mouse.getBestMove(mMode, mEps);
+
+              mBestMoveNewState =(mExp == EPS)?  mouse.epsGreedy(mMode, mEps):mouse.ucb(mC) ;
 
               //Bellman equation for mouse   (-testReward)
               mNewVal = mOldState->getDirectionValue(mMode, mBestMove) 
@@ -371,7 +418,7 @@ void gridSearch(){
             {
             case SARSA: 
 
-              cBestMoveNewState = cat.getBestMove(cMode,cEps);
+              cBestMoveNewState = (cExp == EPS)? cat.epsGreedy(cMode,cEps): cat.ucb(cC);
 
               // important is the -1 infront of reward reward for the cat
               cNewVal = cOldState->getDirectionValue(cMode,cBestMove) 
@@ -415,14 +462,14 @@ void gridSearch(){
           arr[i] = mReward;
 
 
-          if (mReward == 1) sum ++;
+          if (cReward == 1) sum ++;
         }
-        std::cout << mAlpha << ", " << mDiscount << ", " << mEps << ", " << double(sum) / repetitions << std::endl;
+        std::cout << cAlpha << ", " << cDiscount << ", " << cC << ", " << double(sum) / repetitions << std::endl;
         sum = 0;
       }
     }
   }
-  printResults(repetitions, arr);
+  // printResults(repetitions, arr);
 }
 
 

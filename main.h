@@ -25,4 +25,7 @@
 #define DOUBLEQ 2
 #define RANDOM 3
 
+#define EPS 0
+#define UCB 1
+
 #endif 
