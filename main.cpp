@@ -22,13 +22,14 @@ void saveOutput( double *reward, int len){
 }
 
 std::string arrayToString(double *arr, int len){
-  std::string returnStr = "";
+  std::ostringstream os;
   for (size_t i = 0; i < len; i++)
   {
-    returnStr += std::to_string(  arr[i]) + ',';
+    os << arr[i] << ",";
   }
+  std::string str(os.str());
   
-  return returnStr;
+  return str;
 }
 
 void appendOutput( double *reward, int len){
@@ -42,7 +43,17 @@ void appendOutput( double *reward, int len){
   if(fin.is_open()){
     fout<< "\n" << arrayToString(reward,len);
   }
-  std::cout << arrayToString(reward, len);
+
+
+
+  std::cout << "_____________\n" <<   arrayToString(reward,len) << std::endl;
+  for (size_t i = 0; i < len; i++)
+  {
+    std::cout << reward[i] << ",";
+  }
+  std::cout << std::endl;
+  
+
   fin.close();
   fout.close();
 }
@@ -527,14 +538,14 @@ void arena(){
   int mMode = (mAlg == DOUBLEQ)? 1: 0; 
   int cMode = (cAlg == DOUBLEQ)? 1: 0;
   
-  int repetitions = 10000;
+  int repetitions = 1000;
   int epoche = 10000;
 
 
   int sum = 0;
   int binRan; // needed for the coinflip in double Q-learning
 
-  double *arr = (double*) calloc (repetitions,sizeof(double));
+  double *arr = (double*) calloc (epoche,sizeof(double));
 
   int mROld, mCOld, mRNew, mCNew; // mouse column and row
   int cROld, cCOld, cRNew, cCNew; // cat column and row
@@ -717,10 +728,11 @@ void arena(){
         mOldState = mouse.getInternalState();
         cOldState = cat.getInternalState();
       }while (mReward == 0);
-      arr[i] = mReward;
+      std::cout << "mReward " << mReward << std::endl;
+      arr[j] = mReward;
     }
-    // printResults(repetitions, arr);
-    appendOutput(arr, repetitions);
+    // printResults(epoche, arr);
+    appendOutput(arr, epoche);
   }
 }
 

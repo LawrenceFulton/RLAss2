@@ -13,8 +13,11 @@
 #include <string.h>
 
 
-#define ROWS 5
-#define COLUMNS 5
+#include <iostream>
+#include <iomanip>
+
+#define ROWS 8
+#define COLUMNS 8
 
 
 //might not be needed
