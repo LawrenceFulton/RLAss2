@@ -884,7 +884,7 @@ int main(int argc, char const *argv[])
 {
   srand(time(0));
 
-  bool manual = true;
+  bool manual = false;
 
   if (manual)
   {
@@ -906,12 +906,7 @@ int main(int argc, char const *argv[])
     runAlgorithms(catAlg, catExp, mouseAlg, mouseExp);
   }else
   {
-    
+    arena();
   }
-  
-
-
-  // gridSearch();
-  arena();
   return 0;
 }
