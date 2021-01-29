@@ -584,12 +584,12 @@ void gridSearch(){
 void arena(){
   saveOutput(0,0);
   //////////////////////// CHANGABLE PARAMETER /////////////////////
-  int mAlg = QLEARN;
-  int cAlg = SARSA;  
+  int mAlg = DOUBLEQ;
+  int mExp = EPS;
 
-  int mExp = UCB;
-  int cExp = EPS;
-
+  int cAlg = DOUBLEQ;  
+  int cExp = UCB;
+  //QQ_EPS_QQ_UCB
 
   /////////////////// NOT FOR TOUCHING ///////////////////
   double mAlpha = 0;
@@ -886,7 +886,7 @@ int main(int argc, char const *argv[])
 {
   srand(time(0));
 
-  bool manual = true;
+  bool manual = false;
 
   if (manual)
   {
