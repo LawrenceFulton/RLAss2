@@ -603,7 +603,7 @@ void arena(){
 
   // Ininitialisation of param 
   //MOUSE
-  switch(mAlg){
+  switch(cAlg){
     case(QLEARN): // QLEARN
       if(cExp == EPS){ //EPS
         cAlpha = 0.24;
@@ -639,7 +639,7 @@ void arena(){
       break;    
   }
   //CAT
-  switch(cAlg){
+  switch(mAlg){
     case(QLEARN): // QLEARN
       if(mExp == 0){ //EPS
         mAlpha = 0.42;
