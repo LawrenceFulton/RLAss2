@@ -226,7 +226,7 @@ void runAlgorithms(int catAlg, int catExp, int mouseAlg, int mouseExp){
         mBestMove = (mAlg != SARSA)? mouse.epsGreedy(mMode, mEps): mBestMoveNewState;            
       }else
       {
-        mBestMove = (cAlg!=SARSA)? mouse.ucb(mC): mBestMoveNewState;
+        mBestMove = (mAlg!=SARSA)? mouse.ucb(mC): mBestMoveNewState;
       }
       
       if (cExp == EPS)
@@ -760,7 +760,7 @@ void arena(){
           mBestMove = (mAlg != SARSA)? mouse.epsGreedy(mMode, mEps): mBestMoveNewState;            
         }else
         {
-          mBestMove = (cAlg!=SARSA)? mouse.ucb(mC): mBestMoveNewState;
+          mBestMove = (mAlg!=SARSA)? mouse.ucb(mC): mBestMoveNewState;
         }
         
         if (cExp == EPS)
@@ -885,7 +885,7 @@ int main(int argc, char const *argv[])
 {
   srand(time(0));
 
-  bool manual = false;
+  bool manual = true;
 
   if (manual)
   {
