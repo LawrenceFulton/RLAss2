@@ -886,7 +886,7 @@ int main(int argc, char const *argv[])
 {
   srand(time(0));
 
-  bool manual = false;
+  bool manual = true;
 
   if (manual)
   {
