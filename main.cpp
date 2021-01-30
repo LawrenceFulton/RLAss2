@@ -589,17 +589,18 @@ void arena(){
   int cAlg = QLEARN;  
   int cExp = UCB;
 
+  //QQ_EPS_QQ_UCB
 
   /////////////////// NOT FOR TOUCHING ///////////////////
-  double mAlpha;
-  double mDiscount;
-  double mEps;
-  double mC;
+  double mAlpha = 0;
+  double mDiscount = 0;
+  double mEps = 0;
+  double mC = 0;
 
-  double cAlpha;
-  double cDiscount;
-  double cEps;
-  double cC;
+  double cAlpha = 0 ;
+  double cDiscount = 0 ;
+  double cEps = 0;
+  double cC = 0;
 
   // Ininitialisation of param 
   //MOUSE
@@ -641,7 +642,7 @@ void arena(){
   //CAT
   switch(mAlg){
     case(QLEARN): // QLEARN
-      if(mExp == 0){ //EPS
+      if(mExp == EPS){ //EPS
         mAlpha = 0.42;
         mDiscount = 0.19;
         mEps = 0.02;
