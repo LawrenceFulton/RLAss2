@@ -585,10 +585,10 @@ void arena(){
   saveOutput(0,0);
   //////////////////////// CHANGABLE PARAMETER /////////////////////
   int mAlg = DOUBLEQ;
-  int mExp = EPS;
-
-  int cAlg = DOUBLEQ;  
+  int mExp = UCB;
+  int cAlg = SARSA;  
   int cExp = UCB;
+
   //QQ_EPS_QQ_UCB
 
   /////////////////// NOT FOR TOUCHING ///////////////////
