@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 
-mouse = "Q_EPS"
+mouse = "QQ_UCB"
 path = "./data/"+mouse +"/"+ mouse + "_"
 
 
@@ -49,13 +49,13 @@ plt.plot(QQ_EPS, label = "QQ EPS")
 plt.plot(QQ_UCB, label = "QQ UCB")
 
 
-title = "Mouse using Q-learning and EPS"
+title = "Mouse agent using Double Q-learning and UCB"
 
 plt.title(title)
 plt.xlabel("Epochs")
-plt.ylabel("Cumilative mean of reward (Mouse perspective)")
+plt.ylabel("Cumulative mean reward of Mouse Agent")
 plt.legend()
 
 
 
-plt.savefig("figures/1.pdf")
+plt.savefig("figures/QQ_UCB.pdf")
