@@ -586,7 +586,7 @@ void arena(){
   //////////////////////// CHANGABLE PARAMETER /////////////////////
   int mAlg = QLEARN;
   int mExp = UCB;
-  int cAlg = SARSA;  
+  int cAlg = QLEARN;  
   int cExp = UCB;
 
 
@@ -885,7 +885,7 @@ int main(int argc, char const *argv[])
 {
   srand(time(0));
 
-  bool manual = true;
+  bool manual = false;
 
   if (manual)
   {
