@@ -3,11 +3,13 @@ import matplotlib.pyplot as plt
 
 
 
-mouse = "QQ_EPS"
+mouse = "Q_EPS"
 path = "./data/"+mouse +"/"+ mouse + "_"
+
 
 SARSA_EPS = np.genfromtxt(path + "SARSA_EPS.txt", delimiter=',')
 SARSA_UCB = np.genfromtxt(path + "SARSA_UCB.txt", delimiter=',')
+
 
 Q_EPS = np.genfromtxt(path + "Q_EPS.txt", delimiter=',')
 Q_UCB = np.genfromtxt(path + "Q_UCB.txt", delimiter=',')
@@ -56,4 +58,4 @@ plt.legend()
 
 
 
-plt.savefig("figures/dsada5.pdf")
+plt.savefig("figures/1.pdf")
