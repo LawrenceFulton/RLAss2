@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 
 
 
-path = "./data/SARSA_EPS_"
+mouse = "QQ_EPS"
+path = "./data/"+mouse +"/"+ mouse + "_"
 
 SARSA_EPS = np.genfromtxt(path + "SARSA_EPS.txt", delimiter=',')
 SARSA_UCB = np.genfromtxt(path + "SARSA_UCB.txt", delimiter=',')
@@ -45,8 +46,14 @@ plt.plot(Q_UCB, label = "Q UCB")
 plt.plot(QQ_EPS, label = "QQ EPS")
 plt.plot(QQ_UCB, label = "QQ UCB")
 
+
+title = "Mouse using Q-learning and EPS"
+
+plt.title(title)
+plt.xlabel("Epochs")
+plt.ylabel("Cumilative mean of reward (Mouse perspective)")
 plt.legend()
 
 
 
-plt.savefig("figures/dsada3.pdf")
+plt.savefig("figures/dsada5.pdf")
