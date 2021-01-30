@@ -584,9 +584,9 @@ void gridSearch(){
 void arena(){
   saveOutput(0,0);
   //////////////////////// CHANGABLE PARAMETER /////////////////////
-  int mAlg = QLEARN;
+  int mAlg = DOUBLEQ;
   int mExp = UCB;
-  int cAlg = QLEARN;  
+  int cAlg = SARSA;  
   int cExp = UCB;
 
   //QQ_EPS_QQ_UCB
